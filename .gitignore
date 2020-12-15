@@ -1,0 +1,4 @@
+/postgresql
+/redis
+docker-compose.yml
+.env

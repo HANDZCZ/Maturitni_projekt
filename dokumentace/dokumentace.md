@@ -1,0 +1,284 @@
+---
+#title: Piškvorky
+#subtitle: | 
+#    MATURITNÍ PRÁCE – APLIKACE
+#    
+#    Střední průmyslová škola elektrotechnická a Vyšší odborná škola Pardubice
+#date: Březen 2021
+#author:
+#- Jan Najman
+
+header-includes: |
+    \usepackage{float}
+    \let\origfigure\figure
+    \let\endorigfigure\endfigure
+    \renewenvironment{figure}[1][2] {
+        \expandafter\origfigure\expandafter[H]
+    } {
+        \endorigfigure
+    }
+
+    \usepackage{pdfpages}
+    \usepackage{setspace}
+    \usepackage{indentfirst}
+    \usepackage{DejaVuSerifCondensed}
+    \usepackage[T1]{fontenc}
+
+lang: cs-CZ
+pagestyle: empty
+
+#fontfamily:
+fontsize: 12pt
+geometry:
+- top=25mm
+- right=20mm
+- left=30mm
+- bottom=25mm
+
+numbersections: true
+autoEqnLabels: true
+codeBlockCaptions: true
+
+lolTitle: Seznam příloh
+listingTitle: Příloha
+---
+\setstretch{1.25}
+\newpage
+\hyphenpenalty=10000
+
+\includepdf[pages=-]{MP.pdf}
+
+\newpage
+
+## Anotace {.unlisted .unnumbered}
+
+Práce se zabývá rychle rostoucím a čím dál více populárním systémovým jazykem Rust.
+Ukazuje, jak je tento systémový programovací jazyk vyspělý a
+jaké má výhody oproti ostatním systémovým jazykům.
+
+Tato práce konkrétně se zabývá programováním RESTful API serveru
+v programovacím jazyku Rust pomocí frameworku Actix Web
+a programováním front-endové webové aplikace pomocí frameworku Yew.
+\
+
+Klíčová slova: Rust, API, RESTful, Actix, Actix Web, Web, Server, Aplikace, Front-end,
+Front-end aplikace, programování, framework, Yew
+
+
+\newpage
+
+## Annotation {.unlisted .unnumbered}
+
+This work deals with the rapidly growing and increasingly popular
+system programming language Rust. 
+It shows how advanced this system programming language is
+and what its advantages are over other system languages.
+
+This work specifically deals with programming RESTful API server in Rust programming language
+using the Actix Web framework and programming a front-end web application using
+framework Yew.
+\
+
+Keywords: Rust, API, RESTful, Actix, Actix Web, Web, Server, Application, Front-end,
+Front-end applications, programming, framework, Yew
+
+\newpage
+\tableofcontents
+\newpage
+\pagestyle{plain}
+
+\parindent 1,25cm
+\parskip 12pt
+
+
+
+\newpage
+
+# Úvod {.unnumbered}
+
+Poslední dobou se všichni pokouší optimalizovat své web servery již při jejich programování,
+kvůli náporu, který by nemusely stíhat.
+Kdo tak neprovede může toho litovat a snaží se tento problém obejít jinak.
+Tím že změní jazyk nebo vytvoří repliky své aplikace a dají na ně load-balancer,
+tuto možnost nakonec musí využít všichni, při velmi vysokém náporu.
+
+Bohužel nepoužívanější jazyky k naprogramování web serveru jsou PHP, JS (Node.js) nebo Python (Flask, Django).
+Dá se v nich rychle udělat co potřebujete, ale mají spoustu nevýhod, a hlavně všechny tyto jazyky jsou tzv.\ interpretované jazyky.
+To znamená, že na pozadí běží nějaký engine (interpreter), který musí zpracovat daný kód za běhu.
+Jejich největším problémem oproti kompilovaným programovacím jazykům jako jsou Rust, C++, C#
+je jejich rychlost a možnost zjisti chybu při kompilaci.
+
+
+| Jazyk | Pomalejší než C++ (gcc -O2) |
+|-:|:-|
+Rust | 7 %
+C# | 78 %
+Node.js | 93 %
+PHP | 596 %
+Python 3.5 | 1800 %
+Python 2.7 | 2562 %
+
+: Porovnání rychlosti jazyků {#tbl:porovnani_rychlosti_jazyku}
+
+Rozhodl jsem se ukázat, že systémový programovací jazyk Rust
+je na tolik vyspělý, že se nejen zvládne vše, co jiné jazyky, ale i to, že je rychlejší
+než konkurence.
+
+Vybral jsem si programování RESTful API serveru a front-endové webové aplikace
+z důvodu, že jsou to dne nejpoužívanější technologie a mají budoucnost.
+
+Téma Piškvorky jsem si vybral z více důvodů.
+Mělo by na něm jít perfektně předvést alespoň základy obou z frameworků.
+Tato hra by měla být každému povědomá a nemusím se zabývat vysvětlováním pravidel.
+
+
+\newpage
+
+# Analýza obdobných aplikací
+
+Analýzu obdobných aplikací je dobré provádět, abyste získali představu, jak má vaše aplikace vypadat.
+Co chcete, aby uměla a v čem byla lepší něž ostatní aplikace.
+
+## turtlediary
+
+Adresa: <https://www.turtlediary.com/game/tic-tac-toe-multiplayer.html>
+
+Web nabízí možnost hrát piškvorky 3x3 s náhodnými lidmi, nebo s kamarádem.
+
+### Kladné stránky
+
+- ke hraní není potřeba registrace
+- vizuální rozhraní hry
+
+### Záporné stránky
+
+- web není responzivní
+- hrací plocha je moc malá oproti zbylému volnému místu
+- web nemá statistiky nebo výpis nejlepších hráčů
+- na mobilním telefonu není hrací plocha vidět celá
+
+![turtlediary - https://www.turtlediary.com/game/tic-tac-toe-multiplayer.html](analýza1.png){#fig:analýza1_turtlediary}
+
+
+\newpage
+
+## Ultimate Tic Tac Toe
+
+Adresa: <https://ultimate-t3.herokuapp.com>
+
+Web nabízí možnost hrát piškvorky 3x3 na více polích s kamarádem přes internet nebo lokálně.
+
+### Kladné stránky
+
+- ke hraní není potřeba registrace
+- čistý interface
+
+### Záporné stránky
+
+- vice hracích ploch
+- web nemá statistiky nebo výpis nejlepších hráčů
+
+![Ultimate Tic Tac Toe - https://ultimate-t3.herokuapp.com](analýza2.png){#fig:analýza2_utimate_ttt}
+
+
+\newpage
+
+## gametable
+
+Adresa: <https://gametable.org/games/tic-tac-toe>
+
+Web nabízí možnost hrát piškvorky 3x3 s kamarádem lokálně nebo proti AI.
+
+### Kladné stránky
+
+- ke hraní není potřeba registrace
+- čistý interface
+- hra má vysvětleny pravidla pod hrací plochou
+
+### Záporné stránky
+
+- není možnost hrát s někým přes internet
+- web nemá statistiky nebo výpis nejlepších hráčů
+
+![gametable - https://gametable.org/games/tic-tac-toe](analýza3.png){#fig:analýza3_gametable}
+
+
+\newpage
+
+# Návrh projektu
+
+## Obecná struktura
+
+Veškeré požadavky, které nebudou odkazovat na front-end zodpovídá API.
+API je poté napojené na databázi a redis.
+
+Front-end nemá sám o sobě žádný přístup k databázi nebo redisu.
+
+## API
+
+API spojuje vše dohromady. Poskytuje veškeré informace front-endu
+a zpracovává veškeré příchozí informace.
+
+## Redis
+
+V redisu jsou ukládány uživatelské relace, aby k nim byl rychlí přístup a rychlé jejich ověření.
+
+## Databáze
+
+Databáze ukládá informace o uživatelích a hrách pro dlouhodobé uložení dat.
+
+Diagram [@fig:er_diagram]
+
+## Front-end
+
+Slouží pouze jako grafické zobrazení dat.
+Zobrazuje informace o uživatelích a hrách.
+
+
+\newpage
+
+# Zpracování praktické část
+
+
+
+\newpage
+
+# Závěr
+
+
+
+\newpage
+
+# Seznam použité literatury a zdrojů informací
+
+
+
+\newpage
+
+# Seznam použitých zkratek
+
+| Zkratka | Význam |
+|-:|:---------|
+API | Application Programming Interface
+REST | Representational State Transfer
+SPŠE | Střední průmyslová škola elektrotechnická
+VOŠ | Vysoká odborná škola
+
+: Seznam použitých zkratek {#tbl:seznam_použitých_zkratek}
+
+
+\newpage
+
+# Seznam obrázků, tabulek, příloh
+
+\listoffigures
+\listoftables
+\listoflistings
+
+
+
+\newpage
+
+# Přílohy
+
+![ER Diagram](diagram.png){#fig:er_diagram}

@@ -45,10 +45,8 @@ async fn main() -> Result<(), Error> {
         database_url,
     } = Opt::from_args();
 
-    let pool = sqlx::postgres::PgPool::builder()
-        //.max_size(15)
-        //.min_size(8)
-        .build(&database_url)
+    let pool = sqlx::postgres::PgPoolOptions::new()
+        .connect(&database_url)
         .await?;
 
     HttpServer::new(move || {

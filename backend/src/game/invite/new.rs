@@ -35,7 +35,7 @@ async fn process(mut data: NewGameData, pool: &PgPool, check_ban: bool) -> HttpR
                 async move {
                     (query!("select exists(select * from roles_to_users where user_id = $1 and role_id = $2) as banned",
                         *user_id,
-                        Role::Banned as i32
+                        Role::Banned as i16
                         )
                         .fetch_one(pool).await,
                     *user_id)

@@ -32,7 +32,7 @@ async fn process(
     gender: Option<&String>,
     email: Option<&String>,
     password: Option<&String>,
-    roles: Option<&Vec<i32>>,
+    roles: Option<&Vec<i16>>,
 ) -> Result<HttpResponse, Error> {
     let (hash, salt) = if let Some(password) = password {
         let salt = make_salt();
@@ -115,8 +115,8 @@ pub async fn update_user(
         Some(
             roles
                 .iter()
-                .map(|role| *role as i32)
-                .collect::<Vec<i32>>(),
+                .map(|role| *role as i16)
+                .collect::<Vec<i16>>(),
         )
     } else {
         None

@@ -237,8 +237,38 @@ Zobrazuje informace o uživatelích a hrách.
 
 \newpage
 
-# Zpracování praktické část
+# Zpracování praktické části
 
+## Správa uživatelů
+
+Uživatelé jsou umístěni v tabulce *users*.
+Role jsou uloženy v tabulce *roles* a jsou k uživatelům přiřazovány skrz tabulku *roles_to_users*.
+
+Pokud má uživatel roli *Admin* tak mohou upravovat kohokoli údaje bez omezení včetně rolí a hesla.
+
+## Vytváření žádostí o hru
+
+Přihlášení uživatelé mají možnost vytvářet nové hry s různými parametry.
+
+Nejprve se vytvoří žádost o hru, která se nachází v tabulce *game_requests*.
+K dané žádosti na hru se přiřadí uživatelé skrz tabulku *users_to_game_requests*.
+
+## Vytvoření hratelné hry
+
+Po vytvoření žádosti o hru jí musí buď všichni hráči potvrdit a hra bude vytvořena,
+nebo někdo z pozvaných hráčů odmítne a žádost o hru bude vymazána.
+
+Jakmile je účast všech hráčů potvrzena, tak se vytvoří nová hra v tabulce *games*,
+přiřadí se k ní uživatelé skrz tabulku *games_to_users* a žádost o hru je poté vymazána.
+
+## Hraní hry
+
+Hrát můžete jen když jste na tahu a dané políčko ještě nebylo použito.
+Vyhraní hry se kontroluje na front-endu, pokud front-end usoudí,
+že hráč vyhrál tak výhru oznámí backendu a ten výhru zkontroluje.
+
+Backend kontroluje, jestli je hráč na tahu, jestli hra neskončila, nebo jestli jeho tah je validní.
+V případě, že hráč ohlásí výhru, ale server zjistí, že lže, tak daný tah zahodí a odpoví chybou.
 
 
 \newpage

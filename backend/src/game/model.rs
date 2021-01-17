@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 lazy_static! {
     pub static ref GAME_NAME_REGEX: Regex =
-        Regex::new(r#"^(?!.*([ &_\-',])\1)[a-zA-Z0-9 &_\-',]{5,15}"#).unwrap();
+        Regex::new(r#"^(?!.*([ &_\-',\.])\1)[a-zA-Z0-9 &_\-',\.]{5,15}$"#).unwrap();
 }
 
 #[derive(Serialize, Deserialize, Default)]

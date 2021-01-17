@@ -15,6 +15,7 @@ pub struct RegisterData {
     gender: String,
     email: String,
     password: String,
+    description: String
 }
 
 pub async fn register(
@@ -27,17 +28,19 @@ pub async fn register(
         Some(&data.gender),
         Some(&data.email),
         Some(&data.password),
+        Some(&data.description),
     ) {
         let salt = make_salt();
         let hash = make_hash(&data.password, &salt);
 
         match query!(
-            "insert into users (nick, gender, email, hash, salt) values ($1,$2,$3,$4,$5)",
+            "insert into users (nick, gender, email, hash, salt, description) values ($1,$2,$3,$4,$5,$6)",
             data.nick,
             data.gender,
             data.email,
             hash.to_vec(),
-            salt
+            salt,
+            data.description
         )
         .execute(pool.get_ref())
         .await

@@ -6,20 +6,23 @@ lazy_static! {
     // character set a-z|A-Z|0-9
     static ref NICK_REGEX: Regex = Regex::new(r#"^[a-zA-Z0-9]{3,12}$"#).unwrap();
 
-    // length 1..=25
+    // length 1..=50
     // characters <space>&_-', cant repeat after another
     // character set a-z|A-Z|0-9|<space>|&|_|-|'|,|<czech chars>
-    static ref GENDER_REGEX: Regex = Regex::new(r#"^(?!.*([ &_\-',])\1)([a-zA-Z0-9 &_\-',áčďéěíňóřšťúůýžÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ]){1,35}$"#).unwrap();
+    static ref GENDER_REGEX: Regex = Regex::new(r#"^(?!.*([ &_\-',\.])\1)([a-zA-Z0-9 &_\-',\.áčďéěíňóřšťúůýžÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ]){1,50}$"#).unwrap();
 
     // valid email by RFC2822
     // length 5..=25
-    static ref EMAIL_REGEX: Regex = Regex::new(r#"(?=^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$)(.{5,25})"#).unwrap();
+    static ref EMAIL_REGEX: Regex = Regex::new(r#"(?=^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)(.{5,25}$)"#).unwrap();
 
     // length 8..=25
     // min 2 lowercase chars, 2 uppercase chars, 2 digits, 2 special chars
     static ref PASSWORD_REGEX: Regex = Regex::new(r#"^(?=(.*[\d]){2,})(?=(.*[a-z]){2,})(?=(.*[A-Z]){2,})(?=(.*[@#$%!?._-]){2,})(?:[\da-zA-Z@#$%!?._-]){8,25}$"#).unwrap();
 
-
+    // length 1..=650
+    // characters <space>&_-', cant repeat after another
+    // character set a-z|A-Z|0-9|<space>|&|_|-|'|,|<czech chars>
+    static ref DESCRIPTION_REGEX: Regex = Regex::new(r#"^(?!.*([ &_\-',\.])\1)([a-zA-Z0-9 &_\-',\.áčďéěíňóřšťúůýžÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ]){20,650}$"#).unwrap();
 }
 
 macro_rules! option_matches {
@@ -37,6 +40,7 @@ pub fn valid_user_fields<T>(
     gender: Option<T>,
     email: Option<T>,
     password: Option<T>,
+    description: Option<T>
 ) -> bool
 where
     T: AsRef<str>,
@@ -45,6 +49,7 @@ where
     option_matches!(gender, GENDER_REGEX);
     option_matches!(email, EMAIL_REGEX);
     option_matches!(password, PASSWORD_REGEX);
+    option_matches!(description, DESCRIPTION_REGEX);
     true
 }
 

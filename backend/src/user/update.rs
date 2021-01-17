@@ -17,6 +17,7 @@ pub struct UpdateData {
     gender: Option<String>,
     email: Option<String>,
     password: Option<String>,
+    description: Option<String>,
 }
 
 #[derive(Error, Debug)]
@@ -33,6 +34,7 @@ async fn process(
     email: Option<&String>,
     password: Option<&String>,
     roles: Option<&Vec<i16>>,
+    description: Option<&String>,
 ) -> Result<HttpResponse, Error> {
     let (hash, salt) = if let Some(password) = password {
         let salt = make_salt();
@@ -42,14 +44,15 @@ async fn process(
     };
 
     match query_unchecked!(
-        "call update_user($1,$2,$3,$4,$5,$6,$7)",
+        "call update_user($1,$2,$3,$4,$5,$6,$7,$8)",
         id,
         nick,
         gender,
         email,
         hash,
         salt,
-        roles
+        roles,
+        description
     )
     .execute(pool)
     .await
@@ -71,6 +74,7 @@ pub async fn update_self(
         data.gender.as_ref(),
         data.email.as_ref(),
         data.password.as_ref(),
+        data.description.as_ref(),
     ) {
         match process(
             pool.get_ref(),
@@ -80,6 +84,7 @@ pub async fn update_self(
             data.email.as_ref(),
             data.password.as_ref(),
             None,
+            data.description.as_ref(),
         )
         .await
         {
@@ -104,6 +109,7 @@ pub struct AdminUpdateData {
     email: Option<String>,
     password: Option<String>,
     roles: Option<Vec<Role>>,
+    description: Option<String>,
 }
 
 pub async fn update_user(
@@ -112,12 +118,7 @@ pub async fn update_user(
     data: Json<AdminUpdateData>,
 ) -> impl Responder {
     let roles = if let Some(roles) = data.roles.as_ref() {
-        Some(
-            roles
-                .iter()
-                .map(|role| *role as i16)
-                .collect::<Vec<i16>>(),
-        )
+        Some(roles.iter().map(|role| *role as i16).collect::<Vec<i16>>())
     } else {
         None
     };
@@ -130,6 +131,7 @@ pub async fn update_user(
         data.email.as_ref(),
         data.password.as_ref(),
         roles.as_ref(),
+        data.description.as_ref(),
     )
     .await
     {

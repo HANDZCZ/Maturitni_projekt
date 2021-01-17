@@ -7,7 +7,7 @@ use actix_web::{
     Responder,
 };
 use serde::Deserialize;
-use sqlx::{query_as, PgPool};
+use sqlx::{query_as, query, PgPool};
 use std::convert::TryInto;
 
 #[derive(Deserialize)]
@@ -26,11 +26,12 @@ pub async fn login(
         id: uuid::Uuid,
         hash: Vec<u8>,
         salt: String,
+        nick: String,
     }
 
     let row = query_as!(
         Row,
-        "select id, hash, salt from users where email = $1",
+        "select id, nick, hash, salt from users where email = $1",
         data.email
     )
     .fetch_one(pool.get_ref())
@@ -52,7 +53,41 @@ pub async fn login(
                         );
                         resp_500_IntSerErr!()
                     }
-                    Ok(_) => resp_200_Ok!("Ok"),
+                    Ok(_) => {
+                        let roles_q = query!(
+                            "select role_id from roles_to_users where user_id = $1",
+                            row.id
+                        )
+                        .fetch_all(pool.get_ref())
+                        .await;
+
+                        match roles_q {
+                            Ok(roles) => {
+                                let roles = roles
+                                    .into_iter()
+                                    .map(|role| role.role_id as i16)
+                                    .collect::<Vec<i16>>();
+                                #[derive(serde::Serialize)]
+                                struct Response {
+                                    nick: String,
+                                    roles: Vec<i16>,
+                                    uuid: uuid::Uuid,
+                                }
+                                resp_200_Ok!(serde_json::to_string(&Response {
+                                    nick: row.nick,
+                                    roles: roles,
+                                    uuid: row.id
+                                }).unwrap())
+                            }
+                            Err(_) => {
+                                log::error!(
+                                    "Database error ({}) - couldn't get user from database",
+                                    file!()
+                                );
+                                resp_500_IntSerErr!()
+                            }
+                        }
+                    }
                 }
             } else {
                 resp_400_BadReq!("Invalid password")

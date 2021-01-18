@@ -6,6 +6,7 @@ mod login;
 pub mod model;
 mod register;
 mod update;
+mod profile;
 
 pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(
@@ -22,7 +23,8 @@ pub fn config(cfg: &mut web::ServiceConfig) {
             )
             .service(web::resource("/register").route(web::post().to(register::register)))
             .service(web::resource("/login").route(web::post().to(login::login)))
-            .service(web::resource("/update").route(web::post().to(update::update_self))),
+            .service(web::resource("/update").route(web::post().to(update::update_self)))
+            .service(web::resource("/profile/{id}").route(web::get().to(profile::profile))),
     )
     .service(web::resource("/admin/user/update").route(web::post().to(update::update_user)));
 }

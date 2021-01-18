@@ -21,6 +21,7 @@ pub fn config(cfg: &mut web::ServiceConfig) {
             .service(
                 web::scope("/invite")
                     .service(web::resource("/new").route(web::post().to(invite::new)))
+                    .service(web::resource("/get").route(web::get().to(invite::get)))
                     .service(web::resource("/update").route(web::post().to(invite::update))),
             )
             .service(web::resource("/play").route(web::post().to(actions::play))),

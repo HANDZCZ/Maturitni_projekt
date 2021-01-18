@@ -73,11 +73,11 @@ pub async fn login(
                                     roles: Vec<i16>,
                                     uuid: uuid::Uuid,
                                 }
-                                resp_200_Ok!(serde_json::to_string(&Response {
+                                resp_200_Ok_json!(&Response {
                                     nick: row.nick,
                                     roles: roles,
                                     uuid: row.id
-                                }).unwrap())
+                                })
                             }
                             Err(_) => {
                                 log::error!(

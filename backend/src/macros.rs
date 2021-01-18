@@ -1,4 +1,4 @@
-macro_rules! build_resp_err {
+macro_rules! build_resp_inner {
     ($name:ident ,$path:ident) => {
         #[macro_export]
         macro_rules! $name {
@@ -11,10 +11,24 @@ macro_rules! build_resp_err {
         }
     };
 }
+macro_rules! build_resp {
+    ($name:ident ,$path:ident) => {
+        build_resp_inner!($name, $path);
+    };
+    ($name:ident ,$path:ident, $json_name:ident) => {
+        build_resp_inner!($name, $path);
+        #[macro_export]
+        macro_rules! $json_name {
+            ($message:expr) => {
+                actix_web::HttpResponse::$path().json2($message)
+            };
+        }
+    };
+}
 
-build_resp_err!(resp_500_IntSerErr, InternalServerError);
-build_resp_err!(resp_400_BadReq, BadRequest);
-build_resp_err!(resp_200_Ok, Ok);
+build_resp!(resp_500_IntSerErr, InternalServerError);
+build_resp!(resp_400_BadReq, BadRequest);
+build_resp!(resp_200_Ok, Ok, resp_200_Ok_json);
 
 /*#[macro_export]
 macro_rules! resp_500_IntSerErr {

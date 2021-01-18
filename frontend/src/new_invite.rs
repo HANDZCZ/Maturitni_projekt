@@ -143,7 +143,7 @@ impl Component for NewInvite {
                                         );
                                         Msg::Created
                                     }
-                                    400 => {
+                                    400 | 401 => {
                                         if let Ok(body) = body {
                                             notification(
                                                 body,

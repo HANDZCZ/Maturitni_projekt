@@ -2,17 +2,34 @@ pub struct Invites {
     props: Props,
     link: ComponentLink<Self>,
     invites: Vec<Invite>,
+
+    get_fetching: bool,
+    ft: HashMap<String, FetchTask>,
 }
 use crate::base::ActiveNav;
 use crate::base::Base;
 use crate::notifications::*;
-use crate::{UserInfo, AppRoute};
+use crate::{AppRoute, UserInfo};
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
+use yew::format::Nothing;
 use yew::prelude::*;
+use yew::services::fetch::{FetchService, FetchTask, Request, Response};
 use yew_router::prelude::*;
 
 pub enum Msg {
-    Accept(String),
-    Decline(String),
+    UpdateInvite(String, bool),
+    UpdateFailed(String),
+    UpdateDone(String),
+    GetInvites,
+    FailedGetInvites,
+    GotInvites(String),
+}
+
+#[derive(Serialize)]
+struct UpdateData {
+    id: String,
+    accepted: bool,
 }
 
 #[derive(Properties, Clone)]
@@ -25,34 +42,198 @@ impl Component for Invites {
     type Message = Msg;
     type Properties = Props;
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
+        link.send_message(Msg::GetInvites);
         Self {
             props,
             link,
-            //invites: Vec::new(),
-            invites: vec![
-                Invite { uuid:"111".to_owned(), name: "Hra1".into(), moves_needed: 1 },
-                Invite { uuid:"222".to_owned(), name: "Hra2".into(), moves_needed: 2 },
-                Invite { uuid:"333".to_owned(), name: "Hra3".into(), moves_needed: 3 },
-            ],
+            invites: Vec::new(),
+            get_fetching: true,
+            ft: HashMap::new(),
         }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            Msg::Decline(uuid) => {
+            Msg::UpdateInvite(id, accepted) => {
                 notification(
-                    format!("Decline: {}", uuid),
+                    format!("Aktualizace pozvánky:<br>{}", id),
+                    Position::BottomLeft,
+                    Status::Primary,
+                    None,
+                );
+                let req = Request::post(format!("{}/game/invite/update", crate::DOMAIN))
+                    .header("Content-Type", "application/json")
+                    .body(Ok(serde_json::to_string(&UpdateData {
+                        id: id.clone(),
+                        accepted,
+                    })
+                    .unwrap()))
+                    .unwrap();
+                let task = {
+                    let id = id.clone();
+                    FetchService::fetch(
+                        req,
+                        self.link
+                            .callback(move |response: Response<Result<String, _>>| {
+                                let (meta, body) = response.into_parts();
+                                match meta.status.as_u16() {
+                                    200 => Msg::UpdateDone(id.clone()),
+                                    400 | 401 => {
+                                        if let Ok(body) = body {
+                                            notification(
+                                                body,
+                                                Position::BottomLeft,
+                                                Status::Danger,
+                                                None,
+                                            );
+                                        } else {
+                                            notification(
+                                                "Server neposlal žádnou chybovou hlášku."
+                                                    .to_owned(),
+                                                Position::BottomLeft,
+                                                Status::Warning,
+                                                None,
+                                            );
+                                        }
+                                        Msg::UpdateFailed(id.clone())
+                                    }
+                                    500 => {
+                                        notification(
+                                            "Nastala chyba serveru".to_owned(),
+                                            Position::BottomLeft,
+                                            Status::Warning,
+                                            None,
+                                        );
+                                        Msg::UpdateFailed(id.clone())
+                                    }
+                                    _ => {
+                                        notification(
+                                            "Nastala neimplementovaná chyba".to_owned(),
+                                            Position::BottomLeft,
+                                            Status::Warning,
+                                            None,
+                                        );
+                                        Msg::UpdateFailed(id.clone())
+                                    }
+                                }
+                            }),
+                    )
+                    .unwrap()
+                };
+                self.ft.insert(id, task);
+                false
+            }
+            Msg::GetInvites => {
+                notification(
+                    "Získávání pozvánek".to_owned(),
+                    Position::BottomLeft,
+                    Status::Primary,
+                    None,
+                );
+                let req = Request::get(format!("{}/game/invite/get", crate::DOMAIN))
+                    .body(Nothing)
+                    .unwrap();
+                let task = FetchService::fetch(
+                    req,
+                    self.link.callback(|response: Response<Result<String, _>>| {
+                        let (meta, body) = response.into_parts();
+                        match meta.status.as_u16() {
+                            200 => {
+                                if let Ok(body) = body {
+                                    Msg::GotInvites(body)
+                                } else {
+                                    notification(
+                                        "Server neposlal žádnou odpověď".to_owned(),
+                                        Position::BottomLeft,
+                                        Status::Warning,
+                                        None,
+                                    );
+                                    Msg::FailedGetInvites
+                                }
+                            }
+                            400 | 401 => {
+                                if let Ok(body) = body {
+                                    notification(body, Position::BottomLeft, Status::Danger, None);
+                                } else {
+                                    notification(
+                                        "Server neposlal žádnou chybovou hlášku.".to_owned(),
+                                        Position::BottomLeft,
+                                        Status::Warning,
+                                        None,
+                                    );
+                                }
+                                Msg::FailedGetInvites
+                            }
+                            500 => {
+                                notification(
+                                    "Nastala chyba serveru".to_owned(),
+                                    Position::BottomLeft,
+                                    Status::Warning,
+                                    None,
+                                );
+                                Msg::FailedGetInvites
+                            }
+                            _ => {
+                                notification(
+                                    "Nastala neimplementovaná chyba".to_owned(),
+                                    Position::BottomLeft,
+                                    Status::Warning,
+                                    None,
+                                );
+                                Msg::FailedGetInvites
+                            }
+                        }
+                    }),
+                )
+                .unwrap();
+                self.ft.insert("Get".to_owned(), task);
+                false
+            }
+            Msg::GotInvites(invites) => {
+                self.get_fetching = false;
+                self.ft.remove(&"Get".to_owned());
+                self.invites = serde_json::from_str(&invites).unwrap();
+                notification(
+                    "Získávání pozvánek úspěšné".to_owned(),
                     Position::BottomLeft,
                     Status::Success,
                     None,
                 );
+                true
+            }
+            Msg::FailedGetInvites => {
+                self.get_fetching = false;
+                self.ft.remove(&"Get".to_owned());
+                notification(
+                    "Získávání pozvánek selhalo".to_owned(),
+                    Position::BottomLeft,
+                    Status::Danger,
+                    None,
+                );
                 false
             }
-            Msg::Accept(uuid) => {
+            Msg::UpdateDone(id) => {
+                self.invites.remove(
+                    self.invites
+                        .iter()
+                        .position(|invite| invite.id == id)
+                        .unwrap(),
+                );
+                self.ft.remove(&id);
                 notification(
-                    format!("Accept: {}", uuid),
+                    format!("Dokončena aktualizace pozvánky:<br>{}", id),
                     Position::BottomLeft,
                     Status::Success,
+                    None,
+                );
+                true
+            }
+            Msg::UpdateFailed(id) => {
+                self.ft.remove(&id);
+                notification(
+                    format!("Selhala aktualizace pozvánky:<br>{}", id),
+                    Position::BottomLeft,
+                    Status::Danger,
                     None,
                 );
                 false
@@ -89,8 +270,9 @@ impl Component for Invites {
     }
 }
 
+#[derive(Deserialize)]
 struct Invite {
-    uuid: String,
+    id: String,
     name: String,
     moves_needed: u8,
 }
@@ -98,17 +280,18 @@ struct Invite {
 impl Invite {
     fn view(&self, callback: Callback<Msg>) -> Html {
         let accept = callback.reform({
-            let uuid = self.uuid.clone();
-            move |_| Msg::Accept(uuid.clone())});
+            let id = self.id.clone();
+            move |_| Msg::UpdateInvite(id.clone(), true)
+        });
         let decline = callback.reform({
-            let uuid = self.uuid.clone();
-            move |_| Msg::Decline(uuid.clone())
+            let id = self.id.clone();
+            move |_| Msg::UpdateInvite(id.clone(), false)
         });
         html! {
                         <li>
                             <div class="uk-grid">
                                 <p class="uk-width-expand">{ &self.name }<br/>{ format!("Tahů k vítěství: {}", self.moves_needed) }</p>
-                                <p class="uk-text-muted">{ format!("UUID: {}", &self.uuid) }</p>
+                                <p class="uk-text-muted">{ format!("UUID: {}", &self.id) }</p>
                                 <a uk-icon="check" style="color: green;" onclick=accept>
         <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="check"><polyline fill="none" stroke="#000" stroke-width="1.1" points="4,10 8,15 17,4"></polyline></svg>
                                 </a>

@@ -37,7 +37,7 @@ impl Component for Users {
                 {
                     User{
                         nick: "Nick123".to_owned(),
-                        uuid: "6c44f19d-ad02-47ca-9db6-d51e4ae51764".to_owned(),
+                        id: "6c44f19d-ad02-47ca-9db6-d51e4ae51764".to_owned(),
                         gender: "caveman".to_owned(),
                         created_at: "17.12.2020 17:18".to_owned(),
                         victories: 17,
@@ -57,7 +57,7 @@ impl Component for Users {
 
 pub struct User {
     nick: String,
-    uuid: String,
+    id: String,
     created_at: String,
     gender: String,
     victories: u32,
@@ -75,7 +75,7 @@ impl User {
                         <p class="uk-text-meta uk-margin-remove">
                             { "Registrace: "}{ &self.created_at }<br/>
                             { "Pohlaví: " }{ &self.gender }<br/>
-                            { "UUID: " }{ &self.uuid }
+                            { "UUID: " }{ &self.id }
                         </p>
                         <p>{ "Winrate: " }{ format!("{:.2}", self.victories as f32 / self.losses as f32) }</p>
                         <div class="uk-flex uk-flex-column">

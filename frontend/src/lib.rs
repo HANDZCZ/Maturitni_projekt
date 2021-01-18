@@ -108,21 +108,7 @@ impl Component for Model {
                         AppRoute::Admin(AdminRoute::Users) => html!{"Admin user dashboard"},
                         AppRoute::Root => html!{<Index user_info=user_info.clone() model_callback=model_callback.clone()/>},
                         AppRoute::PageNotFound(Permissive(page)) => html!{<NotFound page=page user_info=user_info.clone() model_callback=model_callback.clone()/>},
-                        AppRoute::Profile => html!{<Profile user_info=user_info.clone() user=crate::profile::User {
-                            nick: "Nickovič".to_owned(),
-                            uuid: "6c44f19d-ad02-47ca-9db6-d51e4ae51764".to_owned(),
-                            gender: "caveman".to_owned(),
-                            created_at: "17.12.2020 17:18".to_owned(),
-                            victories: 28,
-                            losses: 19,
-                            ties: 66,
-                            description: "Popis nějaky...".to_owned(),
-                        } games=vec![crate::games::Game {
-                            name: "Hra 1".to_owned(),
-                            uuid: "6352e546-c998-4b99-9f52-e7c2946d6ba9".to_owned(),
-                            players: vec![("Hráč 1".to_owned(),"78abfe73-674f-431f-8ffa-e9c28c467f16".to_owned()),("Hráč 2".to_owned(),"17dbcb0c-d741-49ec-ac44-60240c6bc275".to_owned()),("Hráč 3".to_owned(),"c9ae4750-143d-43fa-8017-83e154c0732e".to_owned())],
-                            status: "Hráč 2 vyhrál".to_owned()
-                        }] model_callback=model_callback.clone()/> },
+                        AppRoute::Profile(id) => html!{<Profile user_info=user_info.clone() user_id=id model_callback=model_callback.clone()/> },
                         AppRoute::Users => html!{<Users user_info=user_info.clone() model_callback=model_callback.clone()/>},
                         AppRoute::Games => html!{<Games user_info=user_info.clone() model_callback=model_callback.clone()/>},
                         AppRoute::Login => html!{<Login user_info=user_info.clone() model_callback=model_callback.clone()/>},
@@ -159,8 +145,8 @@ impl Component for Model {
 pub enum AppRoute {
     #[to = "/admin{*:rest}"]
     Admin(AdminRoute),
-    #[to = "/profile!"]
-    Profile,
+    #[to = "/profile/{id}"]
+    Profile(String),
     #[to = "/users!"]
     Users,
     #[to = "/games!"]

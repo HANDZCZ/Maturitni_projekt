@@ -1,33 +1,35 @@
 #![recursion_limit = "4096"]
 use wasm_bindgen::prelude::*;
 use yew::prelude::*;
+use yew::services::storage::{Area, StorageService};
 use yew_router::switch::{AllowMissing, Permissive};
 use yew_router::{prelude::*, Switch};
 
 const DOMAIN: &str = "http://api.mp.loc";
+const USER_INFO_KEY: &str = "user_info";
 
 mod base;
 mod games;
 mod index;
-mod users;
-mod not_found;
-mod profile;
-mod login;
-mod regex;
-mod notifications;
-mod register;
 mod invites;
+mod login;
 mod new_invite;
-use new_invite::NewInvite;
-use invites::Invites;
-use register::Register;
-use login::Login;
-use profile::Profile;
-use not_found::NotFound;
+mod not_found;
+mod notifications;
+mod profile;
+mod regex;
+mod register;
+mod users;
 use games::Games;
 use index::Index;
+use invites::Invites;
+use login::Login;
+use new_invite::NewInvite;
+use not_found::NotFound;
+use profile::Profile;
+use register::Register;
+use serde::{Deserialize, Serialize};
 use users::Users;
-use serde::Deserialize;
 
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
@@ -35,9 +37,10 @@ static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 struct Model {
     user_info: Option<UserInfo>,
     link: ComponentLink<Self>,
+    storage: StorageService,
 }
 
-#[derive(Clone, PartialEq, Eq, Deserialize)]
+#[derive(Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct UserInfo {
     nick: String,
     uuid: String,
@@ -45,7 +48,7 @@ pub struct UserInfo {
 }
 
 #[roles::get_roles_from_db]
-#[derive(Clone, PartialEq, Eq, serde_repr::Deserialize_repr)]
+#[derive(Clone, PartialEq, Eq, serde_repr::Deserialize_repr, serde_repr::Serialize_repr)]
 #[repr(i16)]
 pub enum Role {
     Admin,
@@ -65,13 +68,38 @@ pub enum Msg {
     Logout,
 }
 
+#[wasm_bindgen(
+    inline_js = r#"export function clear_cookies() { document.cookie.split(";").forEach(c => { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/;domain=." + location.host); }); }"#
+)]
+extern "C" {
+    fn clear_cookies();
+}
+
+#[wasm_bindgen(inline_js = r#"export function has_cookies() { return document.cookie != ""; }"#)]
+extern "C" {
+    fn has_cookies() -> bool;
+}
+
 impl Component for Model {
     type Message = Msg;
     type Properties = ();
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
+        let storage = StorageService::new(Area::Local).expect("Storage was disabled");
+        let user_info = if has_cookies() {
+            match storage.restore(USER_INFO_KEY) {
+                Ok(raw_user_info) => {
+                    serde_json::from_str::<UserInfo>(&raw_user_info).map_or(None, |data| Some(data))
+                }
+                _ => None,
+            }
+        } else {
+            None
+        };
+
         Self {
-            user_info: None,
+            user_info,
             link,
+            storage,
         }
     }
 
@@ -79,16 +107,22 @@ impl Component for Model {
         match msg {
             Msg::LoggedOut => {
                 self.user_info = None;
+                self.storage.remove(USER_INFO_KEY);
+                clear_cookies();
                 true
-            },
+            }
             Msg::LoggedIn(user_info) => {
+                self.storage.store(
+                    USER_INFO_KEY,
+                    Ok(serde_json::to_string(&user_info).unwrap()),
+                );
                 self.user_info = Some(user_info);
                 true
-            },
+            }
             Msg::Logout => {
                 self.link.send_message(Msg::LoggedOut);
                 false
-            },
+            }
         }
     }
 
@@ -100,7 +134,6 @@ impl Component for Model {
         let user_info = self.user_info.clone();
         let model_callback = self.link.callback(|msg| msg);
         html! {
-            <>
             <Router<AppRoute>
                 render = Router::render(move |switch: AppRoute| {
                     match switch {
@@ -121,22 +154,6 @@ impl Component for Model {
                     AppRoute::PageNotFound(Permissive(Some(route.route)))
                 })
             />
-            <button onclick=self.link.callback(|_| Msg::LoggedIn(UserInfo {
-                nick: "Pepíno".to_owned(),
-                uuid: "6c44f19d-ad02-47ca-9db6-d51e4ae51764".to_owned(),
-                roles: vec![],
-            }))>{ "LogUser" }</button>
-            <button onclick=self.link.callback(|_| Msg::LoggedIn(UserInfo {
-                nick: "Domino".to_owned(),
-                uuid: "c9ae4750-143d-43fa-8017-83e154c0732e".to_owned(),
-                roles: vec![],
-            }))>{ "LogUser2" }</button>
-            <button onclick=self.link.callback(|_| Msg::LoggedIn(UserInfo {
-                nick: "Admino".to_owned(),
-                uuid: "6c44f19d-ad02-47ca-9db6-d51e4ae51764".to_owned(),
-                roles: vec![Role::Admin],
-            }))>{ "LogAdmin" }</button>
-            </>
         }
     }
 }

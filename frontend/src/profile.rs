@@ -12,7 +12,7 @@ use crate::UserInfo;
 use serde::Deserialize;
 use yew::format::Nothing;
 use yew::prelude::*;
-use yew::services::fetch::{FetchService, FetchTask, Request, Response};
+use yew::services::fetch::{FetchOptions, FetchService, FetchTask, Request, Response};
 
 #[derive(Clone, PartialEq, Eq, Deserialize)]
 pub struct User {
@@ -105,9 +105,14 @@ impl Component for Profile {
                 ))
                 .body(Nothing)
                 .unwrap();
+                let options = FetchOptions {
+                    credentials: Some(yew::web_sys::RequestCredentials::Include),
+                    ..FetchOptions::default()
+                };
                 self.ft = Some(
-                    FetchService::fetch(
+                    FetchService::fetch_with_options(
                         req,
+                        options,
                         self.link.callback(|response: Response<Result<String, _>>| {
                             let (meta, body) = response.into_parts();
                             match meta.status.as_u16() {

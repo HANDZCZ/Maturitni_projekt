@@ -1,8 +1,18 @@
-pub struct Games(Props);
+pub struct Games {
+    props: Props,
+    link: ComponentLink<Self>,
+    games: Vec<Game>,
+
+    ft: Option<FetchTask>,
+}
+
 use crate::base::{ActiveNav, Base};
+use crate::notifications::*;
 use crate::{AppRoute, UserInfo};
 use serde::Deserialize;
+use yew::format::Nothing;
 use yew::prelude::*;
+use yew::services::fetch::{FetchOptions, FetchService, FetchTask, Request, Response};
 use yew_router::prelude::*;
 
 #[derive(Properties, Clone)]
@@ -11,38 +21,154 @@ pub struct Props {
     pub model_callback: Callback<crate::Msg>,
 }
 
+pub enum Msg {
+    Get,
+    Got(String),
+    Failed,
+}
+
 impl Component for Games {
-    type Message = ();
+    type Message = Msg;
     type Properties = Props;
-    fn create(props: Self::Properties, _link: ComponentLink<Self>) -> Self {
-        Self(props)
+    fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
+        link.send_message(Msg::Get);
+        Self {
+            props,
+            link,
+            games: Vec::new(),
+            ft: None,
+        }
     }
 
-    fn update(&mut self, _msg: Self::Message) -> ShouldRender {
-        false
+    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+        match msg {
+            Msg::Get => {
+                if let None = self.ft {
+                    notification(
+                        "Načítám hry".to_owned(),
+                        Position::BottomLeft,
+                        Status::Primary,
+                        None,
+                    );
+                    let req = Request::get(format!("{}/game/get_all", crate::DOMAIN))
+                        .body(Nothing)
+                        .unwrap();
+                    let options = FetchOptions {
+                        credentials: Some(yew::web_sys::RequestCredentials::Include),
+                        ..FetchOptions::default()
+                    };
+                    self.ft = Some(
+                        FetchService::fetch_with_options(
+                            req,
+                            options,
+                            self.link
+                                .callback(move |response: Response<Result<String, _>>| {
+                                    let (meta, body) = response.into_parts();
+                                    match meta.status.as_u16() {
+                                        200 => {
+                                            if let Ok(body) = body {
+                                                Msg::Got(body)
+                                            } else {
+                                                notification(
+                                                    "Server neposlal žádnou odpověď".to_owned(),
+                                                    Position::BottomLeft,
+                                                    Status::Warning,
+                                                    None,
+                                                );
+                                                Msg::Failed
+                                            }
+                                        }
+                                        400 => {
+                                            if let Ok(body) = body {
+                                                notification(
+                                                    body,
+                                                    Position::BottomLeft,
+                                                    Status::Danger,
+                                                    None,
+                                                );
+                                            } else {
+                                                notification(
+                                                    "Server neposlal žádnou chybovou hlášku."
+                                                        .to_owned(),
+                                                    Position::BottomLeft,
+                                                    Status::Warning,
+                                                    None,
+                                                );
+                                            }
+                                            Msg::Failed
+                                        }
+                                        500 => {
+                                            notification(
+                                                "Nastala chyba serveru".to_owned(),
+                                                Position::BottomLeft,
+                                                Status::Warning,
+                                                None,
+                                            );
+                                            Msg::Failed
+                                        }
+                                        _ => {
+                                            notification(
+                                                "Nastala neimplementovaná chyba".to_owned(),
+                                                Position::BottomLeft,
+                                                Status::Warning,
+                                                None,
+                                            );
+                                            Msg::Failed
+                                        }
+                                    }
+                                }),
+                        )
+                        .unwrap(),
+                    );
+                } else {
+                    notification(
+                        "Načítání her stále probíhá".to_owned(),
+                        Position::BottomLeft,
+                        Status::Warning,
+                        None,
+                    );
+                }
+                false
+            }
+            Msg::Got(data) => {
+                self.ft = None;
+                self.games = serde_json::from_str(&data).unwrap();
+                notification(
+                    "Hry načteny".to_owned(),
+                    Position::BottomLeft,
+                    Status::Success,
+                    None,
+                );
+                true
+            }
+            Msg::Failed => {
+                self.ft = None;
+                notification(
+                    "Načítání her selhalo".to_owned(),
+                    Position::BottomLeft,
+                    Status::Danger,
+                    None,
+                );
+                false
+            }
+        }
     }
 
     fn change(&mut self, props: Self::Properties) -> ShouldRender {
-        let changed = self.0.user_info != props.user_info;
+        let changed = self.props.user_info != props.user_info;
         if changed {
-            self.0 = props;
+            self.props = props;
         }
         changed
     }
 
     fn view(&self) -> Html {
         html! {
-            <Base user_info=&self.0.user_info active_nav=ActiveNav::Games background_image="toyamakanna-H_D-Kscai28-unsplash.jpg" model_callback=self.0.model_callback.clone()>
+            <Base user_info=&self.props.user_info active_nav=ActiveNav::Games background_image="toyamakanna-H_D-Kscai28-unsplash.jpg" model_callback=self.props.model_callback.clone()>
             <div class="uk-container uk-padding-large">
             <div class="uk-child-width-1-3@l uk-child-width-1-2@m uk-child-width-1-1@s uk-text-center uk-flex-center"
                 uk-grid="masonry: true">
-                { Game {
-                    name: "Hra".to_owned(),
-                    id: "6352e546-c998-4b99-9f52-e7c2946d6ba9".to_owned(),
-                    players: vec![("Hráč 1".to_owned(),"78abfe73-674f-431f-8ffa-e9c28c467f16".to_owned()),("Hráč 2".to_owned(),"17dbcb0c-d741-49ec-ac44-60240c6bc275".to_owned()),("Hráč 3".to_owned(),"c9ae4750-143d-43fa-8017-83e154c0732e".to_owned())],
-                    ended: true,
-                    winner: Some("78abfe73-674f-431f-8ffa-e9c28c467f16".to_string())
-                }.view() }
+                { for self.games.iter().map(Game::view) }
             </div>
             </div>
             </Base>

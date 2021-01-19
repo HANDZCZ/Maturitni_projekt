@@ -14,7 +14,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use yew::format::Nothing;
 use yew::prelude::*;
-use yew::services::fetch::{FetchService, FetchTask, Request, Response};
+use yew::services::fetch::{FetchOptions, FetchService, FetchTask, Request, Response};
 use yew_router::prelude::*;
 
 pub enum Msg {
@@ -69,14 +69,21 @@ impl Component for Invites {
                     })
                     .unwrap()))
                     .unwrap();
+                let options = FetchOptions {
+                    credentials: Some(yew::web_sys::RequestCredentials::Include),
+                    ..FetchOptions::default()
+                };
                 let task = {
                     let id = id.clone();
-                    FetchService::fetch(
+                    let model_callback = self.props.model_callback.clone();
+                    FetchService::fetch_with_options(
                         req,
+                        options,
                         self.link
                             .callback(move |response: Response<Result<String, _>>| {
                                 let (meta, body) = response.into_parts();
-                                match meta.status.as_u16() {
+                                let status = meta.status.as_u16();
+                                match status {
                                     200 => Msg::UpdateDone(id.clone()),
                                     400 | 401 => {
                                         if let Ok(body) = body {
@@ -94,6 +101,9 @@ impl Component for Invites {
                                                 Status::Warning,
                                                 None,
                                             );
+                                        }
+                                        if status == 401 {
+                                            model_callback.emit(crate::Msg::LoggedOut);
                                         }
                                         Msg::UpdateFailed(id.clone())
                                     }
@@ -133,11 +143,18 @@ impl Component for Invites {
                 let req = Request::get(format!("{}/game/invite/get", crate::DOMAIN))
                     .body(Nothing)
                     .unwrap();
-                let task = FetchService::fetch(
+                let options = FetchOptions {
+                    credentials: Some(yew::web_sys::RequestCredentials::Include),
+                    ..FetchOptions::default()
+                };
+                let model_callback = self.props.model_callback.clone();
+                let task = FetchService::fetch_with_options(
                     req,
-                    self.link.callback(|response: Response<Result<String, _>>| {
+                    options,
+                    self.link.callback(move |response: Response<Result<String, _>>| {
                         let (meta, body) = response.into_parts();
-                        match meta.status.as_u16() {
+                        let status = meta.status.as_u16();
+                        match status {
                             200 => {
                                 if let Ok(body) = body {
                                     Msg::GotInvites(body)
@@ -161,6 +178,9 @@ impl Component for Invites {
                                         Status::Warning,
                                         None,
                                     );
+                                }
+                                if status == 401 {
+                                    model_callback.emit(crate::Msg::LoggedOut);
                                 }
                                 Msg::FailedGetInvites
                             }

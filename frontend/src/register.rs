@@ -27,7 +27,7 @@ use crate::notifications::*;
 use crate::UserInfo;
 use serde::Serialize;
 use yew::prelude::*;
-use yew::services::fetch::{FetchService, FetchTask, Request, Response};
+use yew::services::fetch::{FetchOptions, FetchService, FetchTask, Request, Response};
 
 pub enum Msg {
     EmailChanged(String),
@@ -217,9 +217,14 @@ impl Component for Register {
                         .header("Content-Type", "application/json")
                         .body(Ok(data))
                         .unwrap();
+                    let options = FetchOptions {
+                        credentials: Some(yew::web_sys::RequestCredentials::Include),
+                        ..FetchOptions::default()
+                    };
                     self.ft = Some(
-                        FetchService::fetch(
+                        FetchService::fetch_with_options(
                             req,
+                            options,
                             self.link.callback(|response: Response<Result<String, _>>| {
                                 let (meta, body) = response.into_parts();
                                 match meta.status.as_u16() {

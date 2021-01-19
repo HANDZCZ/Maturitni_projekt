@@ -17,7 +17,7 @@ use crate::notifications::*;
 use crate::UserInfo;
 use serde::Serialize;
 use yew::prelude::*;
-use yew::services::fetch::{FetchService, FetchTask, Request, Response};
+use yew::services::fetch::{FetchOptions, FetchService, FetchTask, Request, Response};
 
 pub enum Msg {
     NameChanged(String),
@@ -128,12 +128,19 @@ impl Component for NewInvite {
                         .header("Content-Type", "application/json")
                         .body(Ok(data))
                         .unwrap();
+                    let options = FetchOptions {
+                        credentials: Some(yew::web_sys::RequestCredentials::Include),
+                        ..FetchOptions::default()
+                    };
+                    let model_callback = self.props.model_callback.clone();
                     self.ft = Some(
-                        FetchService::fetch(
+                        FetchService::fetch_with_options(
                             req,
-                            self.link.callback(|response: Response<Result<String, _>>| {
+                            options,
+                            self.link.callback(move |response: Response<Result<String, _>>| {
                                 let (meta, body) = response.into_parts();
-                                match meta.status.as_u16() {
+                                let status = meta.status.as_u16();
+                                match status {
                                     200 => {
                                         notification(
                                             "Pozvánka vytvořena".to_owned(),
@@ -165,6 +172,9 @@ impl Component for NewInvite {
                                                 Status::Danger,
                                                 None,
                                             );
+                                        }
+                                        if status == 401 {
+                                            model_callback.emit(crate::Msg::LoggedOut);
                                         }
                                         Msg::Failed
                                     }

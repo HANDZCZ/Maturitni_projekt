@@ -24,7 +24,8 @@ pub fn config(cfg: &mut web::ServiceConfig) {
                     .service(web::resource("/get").route(web::get().to(invite::get)))
                     .service(web::resource("/update").route(web::post().to(invite::update))),
             )
-            .service(web::resource("/play").route(web::post().to(actions::play))),
+            .service(web::resource("/play").route(web::post().to(actions::play)))
+            .service(web::resource("/get_all").route(web::get().to(actions::get_all))),
     )
     .service(web::resource("/admin/game/invite/new").route(web::post().to(invite::admin_new)));
 }

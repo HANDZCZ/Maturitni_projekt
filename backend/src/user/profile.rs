@@ -18,7 +18,7 @@ struct User {
 struct Game {
     name: String,
     id: uuid::Uuid,
-    players: serde_json::value::Value,
+    players: Option<serde_json::value::Value>,
     ended: bool,
     winner: Option<uuid::Uuid>,
 }
@@ -39,15 +39,8 @@ pub async fn profile(pool: Data<PgPool>, Path(id): Path<uuid::Uuid>) -> impl Res
     .await
     {
         Ok(user) => {
-            struct RowData {
-                name: String,
-                id: uuid::Uuid,
-                players: Option<serde_json::value::Value>,
-                ended: bool,
-                winner: Option<uuid::Uuid>,
-            }
             match query_as!(
-                RowData,
+                Game,
                 "select id, name, ended, winner, (select jsonb_agg(jsonb_build_array(nick, id)) as players from users where players_id ? id::text group by true) from (select id, name, ended, winner, a.users as players_id from (select game_id, jsonb_agg(user_id) as users from games_to_users group by game_id) a join games on games.id = a.game_id where a.users ? $1) b",
                 id.to_string(),
                 )
@@ -56,12 +49,7 @@ pub async fn profile(pool: Data<PgPool>, Path(id): Path<uuid::Uuid>) -> impl Res
             {
                 Ok(games) => resp_200_Ok_json!(&ResponseData { 
                     user,
-                    games: games
-                        .into_iter()
-                        .map(|RowData { name, id, players, ended, winner }: RowData|
-                            Game { name, id, ended, winner, players: players.unwrap() }
-                            )
-                        .collect()
+                    games
                 }),
                 Err(_) => resp_500_IntSerErr!()
             }

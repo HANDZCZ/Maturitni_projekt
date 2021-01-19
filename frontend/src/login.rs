@@ -12,7 +12,7 @@ use crate::notifications::*;
 use crate::{AppRoute, UserInfo};
 use serde::Serialize;
 use yew::prelude::*;
-use yew::services::fetch::{FetchService, FetchTask, Request, Response};
+use yew::services::fetch::{FetchService, FetchTask, Request, Response, FetchOptions};
 use yew_router::prelude::*;
 
 pub enum Msg {
@@ -112,9 +112,14 @@ impl Component for Login {
                         .header("Content-Type", "application/json")
                         .body(Ok(data))
                         .unwrap();
+                    let options = FetchOptions {
+                        credentials: Some(yew::web_sys::RequestCredentials::Include),
+                        ..FetchOptions::default()
+                    };
                     self.ft = Some(
-                        FetchService::fetch(
+                        FetchService::fetch_with_options(
                             req,
+                            options,
                             self.link.callback(|response: Response<Result<String, _>>| {
                                 let (meta, body) = response.into_parts();
                                 match meta.status.as_u16() {

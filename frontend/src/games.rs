@@ -183,6 +183,7 @@ pub struct Game {
     pub players: Vec<(String, String)>,
     pub ended: bool,
     pub winner: Option<String>,
+    pub moves_needed: u8,
 }
 
 impl Game {
@@ -206,7 +207,7 @@ impl Game {
                 <div class="uk-card uk-card-secondary">
                     <div class="uk-card-body">
                         <h3 class="uk-card-title">{ &self.name }</h3>
-                        <p>{ "UUID: " }{ &self.id }</p>
+                        <p>{ "Tahů k vítěství: " }{ self.moves_needed }<br/>{ "UUID: " }{ &self.id }</p>
                         <h4>{ "Hráči" }</h4>
                         <ul class="uk-list uk-list-divider">
                             {

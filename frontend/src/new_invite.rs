@@ -137,31 +137,62 @@ impl Component for NewInvite {
                         FetchService::fetch_with_options(
                             req,
                             options,
-                            self.link.callback(move |response: Response<Result<String, _>>| {
-                                let (meta, body) = response.into_parts();
-                                let status = meta.status.as_u16();
-                                match status {
-                                    200 => {
-                                        notification(
-                                            "Pozvánka vytvořena".to_owned(),
-                                            Position::BottomLeft,
-                                            Status::Success,
-                                            None,
-                                        );
-                                        Msg::Created
-                                    }
-                                    400 | 401 => {
-                                        if let Ok(body) = body {
+                            self.link
+                                .callback(move |response: Response<Result<String, _>>| {
+                                    let (meta, body) = response.into_parts();
+                                    let status = meta.status.as_u16();
+                                    match status {
+                                        200 => {
                                             notification(
-                                                body,
+                                                "Pozvánka vytvořena".to_owned(),
                                                 Position::BottomLeft,
-                                                Status::Danger,
+                                                Status::Success,
                                                 None,
                                             );
-                                        } else {
+                                            Msg::Created
+                                        }
+                                        400 | 401 => {
+                                            if let Ok(body) = body {
+                                                notification(
+                                                    body.clone(),
+                                                    Position::BottomLeft,
+                                                    Status::Danger,
+                                                    None,
+                                                );
+                                                if status == 401
+                                                    && body == "User not logged in".to_owned()
+                                                {
+                                                    model_callback.emit(crate::Msg::LoggedOut);
+                                                }
+                                            } else {
+                                                notification(
+                                                    "Server neposlal žádnou chybovou hlášku."
+                                                        .to_owned(),
+                                                    Position::BottomLeft,
+                                                    Status::Warning,
+                                                    None,
+                                                );
+                                                notification(
+                                                    "Vytváření pozvánky selhalo".to_owned(),
+                                                    Position::BottomLeft,
+                                                    Status::Danger,
+                                                    None,
+                                                );
+                                            }
+                                            Msg::Failed
+                                        }
+                                        500 => {
                                             notification(
-                                                "Server neposlal žádnou chybovou hlášku."
-                                                    .to_owned(),
+                                                "Nastala chyba serveru".to_owned(),
+                                                Position::BottomLeft,
+                                                Status::Warning,
+                                                None,
+                                            );
+                                            Msg::Failed
+                                        }
+                                        _ => {
+                                            notification(
+                                                "Nastala neimplementovaná chyba".to_owned(),
                                                 Position::BottomLeft,
                                                 Status::Warning,
                                                 None,
@@ -172,38 +203,10 @@ impl Component for NewInvite {
                                                 Status::Danger,
                                                 None,
                                             );
+                                            Msg::Failed
                                         }
-                                        if status == 401 {
-                                            model_callback.emit(crate::Msg::LoggedOut);
-                                        }
-                                        Msg::Failed
                                     }
-                                    500 => {
-                                        notification(
-                                            "Nastala chyba serveru".to_owned(),
-                                            Position::BottomLeft,
-                                            Status::Warning,
-                                            None,
-                                        );
-                                        Msg::Failed
-                                    }
-                                    _ => {
-                                        notification(
-                                            "Nastala neimplementovaná chyba".to_owned(),
-                                            Position::BottomLeft,
-                                            Status::Warning,
-                                            None,
-                                        );
-                                        notification(
-                                            "Vytváření pozvánky selhalo".to_owned(),
-                                            Position::BottomLeft,
-                                            Status::Danger,
-                                            None,
-                                        );
-                                        Msg::Failed
-                                    }
-                                }
-                            }),
+                                }),
                         )
                         .unwrap(),
                     );
@@ -241,7 +244,7 @@ impl Component for NewInvite {
             Msg::Submit
         });
         html! {
-            <Base user_info=&self.props.user_info active_nav=None background_image="" model_callback=self.props.model_callback.clone()>
+            <Base user_info=&self.props.user_info active_nav=None background_image="pexels-aleksandar-pasaric-2341830.jpg" model_callback=self.props.model_callback.clone()>
         <div class="uk-container uk-section-secondary uk-padding-large uk-margin-medium-top uk-width-1-2@l">
             <article class="uk-article">
                 <h1 class="uk-article-title uk-nav-center uk-margin-medium-bottom">{ "Nová pozvánka" }</h1>

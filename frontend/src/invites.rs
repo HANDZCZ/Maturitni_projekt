@@ -272,7 +272,7 @@ impl Component for Invites {
     fn view(&self) -> Html {
         let callback = self.link.callback(|msg| msg);
         html! {
-            <Base user_info=&self.props.user_info active_nav=ActiveNav::Invites background_image="" model_callback=self.props.model_callback.clone()>
+            <Base user_info=&self.props.user_info active_nav=ActiveNav::Invites background_image="pexels-sanaan-mazhar-3075993.jpg" model_callback=self.props.model_callback.clone()>
         <div class="uk-container uk-section-secondary uk-padding-large uk-margin-medium-top">
             <ul class="uk-list uk-list-divider uk-list-large">
                 <li class="uk-nav-center">

@@ -1,5 +1,5 @@
 use crate::game::model::GameData;
-use crate::session::UserWithRoles;
+use crate::session::LoggedInUser;
 use crate::*;
 use actix_web::{
     web::{Data, Json},
@@ -15,13 +15,13 @@ pub struct InviteData {
 }
 
 pub async fn update(
-    user: UserWithRoles,
+    user: LoggedInUser,
     pool: Data<PgPool>,
     data: Json<InviteData>,
 ) -> impl Responder {
     match query!(
         "call update_invite($1, $2, $3, $4)",
-        user.id,
+        user.0,
         data.id,
         data.accepted,
         bincode::serialize(&GameData::default()).unwrap()

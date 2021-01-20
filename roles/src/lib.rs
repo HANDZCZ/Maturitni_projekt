@@ -22,7 +22,7 @@ pub fn get_roles_from_db(_attr: TokenStream, item: TokenStream) -> TokenStream {
         let name = Ident::new(row.get(0), Span::call_site());
         let id: i16 = row.get(1);
         let variant: syn::Variant = parse_quote! {
-            #name = #id
+            #name = #id as i32
         };
         variants.push(variant);
     }

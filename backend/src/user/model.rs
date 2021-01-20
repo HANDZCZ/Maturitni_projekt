@@ -57,7 +57,7 @@ use serde_repr::Deserialize_repr;
 
 #[roles::get_roles_from_db]
 #[derive(Deserialize_repr, Debug, sqlx::Type, Copy, Clone, Eq, PartialEq)]
-#[repr(i16)]
+#[repr(i32)]
 pub enum Role {
     Admin,
     Banned,

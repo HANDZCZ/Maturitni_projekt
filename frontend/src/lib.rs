@@ -1,11 +1,31 @@
 #![recursion_limit = "4096"]
+use lazy_static::lazy_static;
 use wasm_bindgen::prelude::*;
 use yew::prelude::*;
 use yew::services::storage::{Area, StorageService};
 use yew_router::switch::{AllowMissing, Permissive};
 use yew_router::{prelude::*, Switch};
 
-const DOMAIN: &str = "http://api.mp.loc";
+#[wasm_bindgen(inline_js = r#"export function get_domain() { return DOMAIN; }"#)]
+extern "C" {
+    fn get_domain() -> String;
+}
+
+lazy_static! {
+    pub static ref DOMAIN: String = {
+        let res = get_domain();
+        if res.is_empty() {
+            log::error!("Could not get api domain!");
+            panic!();
+        }
+        res
+    };
+}
+impl std::fmt::Display for DOMAIN {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.as_str())
+    }
+}
 const USER_INFO_KEY: &str = "user_info";
 
 mod base;

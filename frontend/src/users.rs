@@ -171,7 +171,7 @@ impl Component for Users {
         <Base user_info=&self.props.user_info active_nav=ActiveNav::Users background_image="yong-chuan-tan-YlxMenahnB4-unsplash.jpg" model_callback=self.props.model_callback.clone()>
         <div class="uk-container uk-padding-large">
             <div class="uk-child-width-1-3@l uk-child-width-1-2@m uk-child-width-1-1@s uk-text-center uk-flex-center"
-                uk-grid="masonry: true">
+                uk-grid="masonry: false">
                 { for self.users.iter().map(|u| u.view(admin)) }
             </div>
         </div>

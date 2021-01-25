@@ -3,7 +3,7 @@ use lazy_static::lazy_static;
 use wasm_bindgen::prelude::*;
 use yew::prelude::*;
 use yew::services::storage::{Area, StorageService};
-use yew_router::switch::{AllowMissing, Permissive};
+use yew_router::switch::Permissive;
 use yew_router::{prelude::*, Switch};
 
 #[wasm_bindgen(inline_js = r#"export function get_domain() { return DOMAIN; }"#)]
@@ -29,6 +29,7 @@ impl std::fmt::Display for DOMAIN {
 const USER_INFO_KEY: &str = "user_info";
 
 mod base;
+mod game;
 mod games;
 mod index;
 mod invites;
@@ -40,6 +41,7 @@ mod profile;
 mod regex;
 mod register;
 mod users;
+use game::Game;
 use games::Games;
 use index::Index;
 use invites::Invites;
@@ -69,7 +71,7 @@ pub struct UserInfo {
 
 #[roles::get_roles_from_db]
 #[derive(Clone, PartialEq, Eq, serde_repr::Deserialize_repr, serde_repr::Serialize_repr)]
-#[repr(i16)]
+#[repr(i32)]
 pub enum Role {
     Admin,
     Banned,
@@ -157,11 +159,10 @@ impl Component for Model {
             <Router<AppRoute>
                 render = Router::render(move |switch: AppRoute| {
                     match switch {
-                        AppRoute::Admin(AdminRoute::Root) => html!{"Admin root"},
-                        AppRoute::Admin(AdminRoute::Users) => html!{"Admin user dashboard"},
                         AppRoute::Root => html!{<Index user_info=user_info.clone() model_callback=model_callback.clone()/>},
                         AppRoute::PageNotFound(Permissive(page)) => html!{<NotFound page=page user_info=user_info.clone() model_callback=model_callback.clone()/>},
                         AppRoute::Profile(id) => html!{<Profile user_info=user_info.clone() user_id=id model_callback=model_callback.clone()/> },
+                        AppRoute::Game(id) => html!{<Game user_info=user_info.clone() game_id=id model_callback=model_callback.clone()/> },
                         AppRoute::Users => html!{<Users user_info=user_info.clone() model_callback=model_callback.clone()/>},
                         AppRoute::Games => html!{<Games user_info=user_info.clone() model_callback=model_callback.clone()/>},
                         AppRoute::Login => html!{<Login user_info=user_info.clone() model_callback=model_callback.clone()/>},
@@ -180,10 +181,10 @@ impl Component for Model {
 
 #[derive(Debug, Switch, Clone)]
 pub enum AppRoute {
-    #[to = "/admin{*:rest}"]
-    Admin(AdminRoute),
     #[to = "/profile/{id}"]
     Profile(String),
+    #[to = "/game/{id}"]
+    Game(String),
     #[to = "/users!"]
     Users,
     #[to = "/games!"]
@@ -199,14 +200,6 @@ pub enum AppRoute {
     #[to = "/page-not-found"]
     PageNotFound(Permissive<String>),
     #[to = "/!"]
-    Root,
-}
-
-#[derive(Debug, Switch, Clone)]
-pub enum AdminRoute {
-    #[to = "/users!"]
-    Users,
-    #[to = ""]
     Root,
 }
 

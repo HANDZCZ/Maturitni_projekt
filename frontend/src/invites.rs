@@ -313,10 +313,10 @@ impl Invite {
                                 <p class="uk-width-expand">{ &self.name }<br/>{ format!("Tahů k vítěství: {}", self.moves_needed) }</p>
                                 <p class="uk-text-muted">{ format!("UUID: {}", &self.id) }</p>
                                 <a uk-icon="check" style="color: green;" onclick=accept>
-        <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="check"><polyline fill="none" stroke="#000" stroke-width="1.1" points="4,10 8,15 17,4"></polyline></svg>
+        <svg width="30" height="auto" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="check"><polyline fill="none" stroke="#000" stroke-width="1.1" points="4,10 8,15 17,4"></polyline></svg>
                                 </a>
                                 <a uk-icon="close" style="color: red;" onclick=decline>
-        <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="close"><path fill="none" stroke="#000" stroke-width="1.06" d="M16,16 L4,4"></path><path fill="none" stroke="#000" stroke-width="1.06" d="M16,4 L4,16"></path></svg>
+        <svg width="30" height="auto" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="close"><path fill="none" stroke="#000" stroke-width="1.06" d="M16,16 L4,4"></path><path fill="none" stroke="#000" stroke-width="1.06" d="M16,4 L4,16"></path></svg>
                                 </a>
                             </div>
                         </li>

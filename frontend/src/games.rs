@@ -167,7 +167,7 @@ impl Component for Games {
             <Base user_info=&self.props.user_info active_nav=ActiveNav::Games background_image="toyamakanna-H_D-Kscai28-unsplash.jpg" model_callback=self.props.model_callback.clone()>
             <div class="uk-container uk-padding-large">
             <div class="uk-child-width-1-3@l uk-child-width-1-2@m uk-child-width-1-1@s uk-text-center uk-flex-center"
-                uk-grid="masonry: true">
+                uk-grid="masonry: false">
                 { for self.games.iter().map(Game::view) }
             </div>
             </div>
@@ -221,7 +221,9 @@ impl Game {
                     </div>
                     <div class="uk-card-footer">
                         <p>{ "Status: " }{ status }</p>
-                        <a class="uk-button uk-button-default">{ "Přejít na hru" }</a>
+                        <RouterAnchor<AppRoute> route=AppRoute::Game(self.id.clone())>
+                            <a class="uk-button uk-button-default">{ "Přejít na hru" }</a>
+                        </RouterAnchor<AppRoute>>
                     </div>
                 </div>
             </div>

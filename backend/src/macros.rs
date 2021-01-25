@@ -29,6 +29,7 @@ macro_rules! build_resp {
 build_resp!(resp_500_IntSerErr, InternalServerError);
 build_resp!(resp_400_BadReq, BadRequest);
 build_resp!(resp_200_Ok, Ok, resp_200_Ok_json);
+build_resp!(resp_401_Unauth, Unauthorized);
 
 /*#[macro_export]
 macro_rules! resp_500_IntSerErr {

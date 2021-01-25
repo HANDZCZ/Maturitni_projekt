@@ -33,8 +33,12 @@ pub struct WonGameData {
 }
 
 async fn process(data: PlayGameData, pool: &PgPool, user_id: uuid::Uuid) -> HttpResponse {
+    if data.croft.x > 30 || data.croft.y > 30 {
+        return resp_400_BadReq!("Playing feld is limited to 30x30");
+    }
+
     match query!(
-        "select user_id from games_to_users where game_id = $1",
+        "select user_id from games_to_users where game_id = $1 order by user_id",
         data.game_id
     )
     .fetch_all(pool)
@@ -46,7 +50,7 @@ async fn process(data: PlayGameData, pool: &PgPool, user_id: uuid::Uuid) -> Http
                 .map(|user_struct| user_struct.user_id)
                 .collect::<Vec<uuid::Uuid>>();
             if !users.contains(&user_id) {
-                return resp_400_BadReq!("You aren't in this game.");
+                return resp_401_Unauth!("You aren't in this game.");
             }
 
             match query!(
@@ -80,7 +84,7 @@ async fn process(data: PlayGameData, pool: &PgPool, user_id: uuid::Uuid) -> Http
                             game_data.field.push(data.croft);
 
                             if let Some(true) = data.tie {
-                                if game_data.field.len() == 256 * 256 {
+                                if game_data.field.len() == 30 * 30 {
                                     match query!(
                                         "update games set data = $1, last_played = $2, ended = true where id = $3",
                                         bincode::serialize(&game_data).expect("Should never happen."),

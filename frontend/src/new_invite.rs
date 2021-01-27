@@ -10,6 +10,8 @@ pub struct NewInvite {
     users: String,
     users_valid: bool,
 
+    use_admin: bool,
+
     ft: Option<FetchTask>,
 }
 use crate::base::Base;
@@ -27,6 +29,7 @@ pub enum Msg {
     Created,
     Failed,
     Submit,
+    UseAdminChanged,
 }
 
 #[derive(Properties, Clone)]
@@ -48,11 +51,16 @@ impl Component for NewInvite {
             name: String::new(),
             name_valid: true,
             ft: None,
+            use_admin: false,
         }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
+            Msg::UseAdminChanged => {
+                self.use_admin = !self.use_admin;
+                true
+            }
             Msg::NameChanged(new) => {
                 self.name = new;
                 let new_valid = crate::regex::GAME_NAME_REGEX.is_match(&self.name).unwrap();
@@ -77,7 +85,9 @@ impl Component for NewInvite {
                 false
             }
             Msg::Submit => {
-                if !self.name_valid {
+                if self.use_admin {
+                    self.link.send_message(Msg::Create);
+                } else if !self.name_valid {
                     notification(
                         "Jméno není validní!".to_owned(),
                         Position::BottomLeft,
@@ -124,10 +134,14 @@ impl Component for NewInvite {
                         moves_needed: self.moves,
                     })
                     .unwrap();
-                    let req = Request::post(format!("{}/game/invite/new", crate::DOMAIN))
-                        .header("Content-Type", "application/json")
-                        .body(Ok(data))
-                        .unwrap();
+                    let req = Request::post(format!(
+                        "{}/{}game/invite/new",
+                        crate::DOMAIN,
+                        if self.use_admin { "admin/" } else { "" }
+                    ))
+                    .header("Content-Type", "application/json")
+                    .body(Ok(data))
+                    .unwrap();
                     let options = FetchOptions {
                         credentials: Some(yew::web_sys::RequestCredentials::Include),
                         ..FetchOptions::default()
@@ -243,6 +257,26 @@ impl Component for NewInvite {
             e.prevent_default();
             Msg::Submit
         });
+        let admin = {
+            let is_admin = if let Some(user_info) = &self.props.user_info {
+                user_info.is_admin()
+            } else {
+                false
+            };
+
+            if is_admin {
+                let callback = self.link.callback(|_| Msg::UseAdminChanged);
+                html! {
+                    <div class="uk-flex-center uk-margin uk-nav-center">
+                        <label><input class="uk-checkbox" type="checkbox" oninput=callback checked=self.use_admin/>{" Použít admin práva"}</label>
+                        <p class="uk-text-muted uk-margin-remove-top">{"(Vypne skoro všechny kontroly, vaše id není automaticky přidáno.)"}</p>
+                    </div>
+                }
+            } else {
+                html! { {""} }
+            }
+        };
+
         html! {
             <Base user_info=&self.props.user_info active_nav=None background_image="pexels-aleksandar-pasaric-2341830.jpg" model_callback=self.props.model_callback.clone()>
         <div class="uk-container uk-section-secondary uk-padding-large uk-margin-medium-top uk-width-1-2@l">
@@ -253,7 +287,7 @@ impl Component for NewInvite {
                         <div class="uk-margin">
                             <label class="uk-form-label">{"Jméno"}</label>
                             <div class="uk-form-controls">
-                                <input class={ if self.name_valid { "uk-input" } else { "uk-input uk-form-danger" } } type="text" oninput=name value=&self.name/>
+                                <input class={ if self.name_valid || self.use_admin { "uk-input" } else { "uk-input uk-form-danger" } } type="text" oninput=name value=&self.name/>
                             </div>
                         </div>
                         <div class="uk-margin">
@@ -266,9 +300,10 @@ impl Component for NewInvite {
                         <div class="uk-margin">
                             <label class="uk-form-label">{"UUID uživatelů"}</label>
                             <div class="uk-form-controls">
-                                <textarea class={ if self.users_valid { "uk-textarea" } else { "uk-textarea uk-form-danger" } } rows="5" style="resize: vertical;" oninput=users value=&self.users></textarea>
+                                <textarea class={ if self.users_valid || self.use_admin { "uk-textarea" } else { "uk-textarea uk-form-danger" } } rows="5" style="resize: vertical;" oninput=users value=&self.users></textarea>
                             </div>
                         </div>
+                        { admin }
                         <button type="submit" class="uk-button uk-button-default uk-align-center uk-margin-remove-bottom">
                             {"Vytvořit"}
                         </button>

@@ -209,12 +209,18 @@ impl User {
                         </p>
                         <p>{ "Winrate: " }{ format!("{:.2}", self.victories as f32 / self.losses as f32) }</p>
                         <div class="uk-flex uk-flex-column">
-                            <a href="#" class="uk-button uk-button-default">{ "Výhry: " }{ self.victories }</a>
-                            <a href="#" class="uk-button uk-button-default">{ "Remízy: " }{ self.ties }</a>
-                            <a href="#" class="uk-button uk-button-default">{ "Prohry: " }{ self.losses }</a>
+                            <a class="uk-button uk-button-default">{ "Výhry: " }{ self.victories }</a>
+                            <a class="uk-button uk-button-default">{ "Remízy: " }{ self.ties }</a>
+                            <a class="uk-button uk-button-default">{ "Prohry: " }{ self.losses }</a>
                             {
                                 if admin {
-                                    html! {<a class="uk-button uk-button-danger">{ "Upravit učet" }</a>}
+                                    html! {
+                                        <a class="uk-button uk-button-danger">
+                                            <RouterAnchor<AppRoute> route=AppRoute::Edit(self.id.clone())>
+                                                { "Upravit učet" }
+                                            </RouterAnchor<AppRoute>>
+                                        </a>
+                                    }
                                 } else { html! {} }
                             }
                         </div>

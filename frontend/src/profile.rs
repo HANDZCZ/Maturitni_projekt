@@ -8,11 +8,12 @@ pub struct Profile {
 use crate::base::{ActiveNav, Base};
 use crate::games::Game;
 use crate::notifications::*;
-use crate::UserInfo;
+use crate::{AppRoute, UserInfo};
 use serde::Deserialize;
 use yew::format::Nothing;
 use yew::prelude::*;
 use yew::services::fetch::{FetchOptions, FetchService, FetchTask, Request, Response};
+use yew_router::prelude::*;
 
 #[derive(Clone, PartialEq, Eq, Deserialize)]
 pub struct User {
@@ -243,7 +244,13 @@ impl Component for Profile {
                         {
                             if let Some(user_info) = &self.props.user_info {
                                 if user_info.is_admin() || self.props.user_id == user_info.uuid {
-                                    html! { <a class="uk-margin-auto-left uk-width-1-1@s uk-width-1-6@m uk-button uk-button-danger">{ "Upravit učet" }</a> }
+                                    html! {
+                                        <a class="uk-margin-auto-left uk-width-1-1@s uk-width-1-6@m uk-button uk-button-danger">
+                                            <RouterAnchor<AppRoute> route=AppRoute::Edit(self.props.user_id.clone())>
+                                                { "Upravit učet" }
+                                            </RouterAnchor<AppRoute>>
+                                        </a>
+                                    }
                                 } else { html! {} }
                             } else { html! {} }
                         }

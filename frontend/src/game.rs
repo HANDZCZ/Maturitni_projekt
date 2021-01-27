@@ -5,7 +5,7 @@ pub struct Game {
 
     get_ft: Option<FetchTask>,
     play_ft: Option<FetchTask>,
-    it: IntervalTask,
+    it: Option<IntervalTask>,
 }
 use crate::base::Base;
 use crate::notifications::*;
@@ -72,7 +72,7 @@ impl PlayState {
 }
 
 #[derive(Serialize, Clone)]
-struct WonGameData {
+pub struct WonGameData {
     moves: Vec<Croft>,
     direction: WonDirection,
 }
@@ -110,7 +110,7 @@ impl Component for Game {
             data: GameData::default(),
             play_ft: None,
             get_ft: None,
-            it: interval,
+            it: Some(interval),
         }
     }
 
@@ -224,6 +224,7 @@ impl Component for Game {
                 match state {
                     PlayState::Won(_) | PlayState::Tie => {
                         self.data.ended = true;
+                        self.it = None;
                     }
                     _ => {}
                 }
@@ -349,6 +350,9 @@ impl Component for Game {
                     || self.data.winner != game_data.winner;
                 if changed {
                     self.data = game_data;
+                    if self.data.ended {
+                        self.it = None;
+                    }
                 }
                 if manual {
                     notification(
@@ -667,9 +671,12 @@ impl Component for Game {
                     .unwrap()
                     .0
             )
-        } else {
+        } else if self.data.data.len() == 30 * 30 {
             "Remíza".to_owned()
+        } else {
+            "we will see".to_owned()
         };
+
         html! {
         <Base user_info=&self.props.user_info active_nav=None background_image="andre-benz-JBkwaYMuhdc-unsplash.jpg" model_callback=self.props.model_callback.clone()>
         <div class="uk-section-secondary uk-margin-medium uk-margin-medium-left uk-margin-medium-right uk-padding">

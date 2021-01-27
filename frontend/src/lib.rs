@@ -29,6 +29,7 @@ impl std::fmt::Display for DOMAIN {
 const USER_INFO_KEY: &str = "user_info";
 
 mod base;
+mod edit;
 mod game;
 mod games;
 mod index;
@@ -41,6 +42,7 @@ mod profile;
 mod regex;
 mod register;
 mod users;
+use edit::Edit;
 use game::Game;
 use games::Games;
 use index::Index;
@@ -70,7 +72,15 @@ pub struct UserInfo {
 }
 
 #[roles::get_roles_from_db]
-#[derive(Clone, PartialEq, Eq, serde_repr::Deserialize_repr, serde_repr::Serialize_repr)]
+#[derive(
+    Clone,
+    PartialEq,
+    Eq,
+    serde_repr::Deserialize_repr,
+    serde_repr::Serialize_repr,
+    strum::EnumIter,
+    strum::ToString,
+)]
 #[repr(i32)]
 pub enum Role {
     Admin,
@@ -162,6 +172,7 @@ impl Component for Model {
                         AppRoute::Root => html!{<Index user_info=user_info.clone() model_callback=model_callback.clone()/>},
                         AppRoute::PageNotFound(Permissive(page)) => html!{<NotFound page=page user_info=user_info.clone() model_callback=model_callback.clone()/>},
                         AppRoute::Profile(id) => html!{<Profile user_info=user_info.clone() user_id=id model_callback=model_callback.clone()/> },
+                        AppRoute::Edit(id) => html!{<Edit user_info=user_info.clone() user_id=id model_callback=model_callback.clone()/> },
                         AppRoute::Game(id) => html!{<Game user_info=user_info.clone() game_id=id model_callback=model_callback.clone()/> },
                         AppRoute::Users => html!{<Users user_info=user_info.clone() model_callback=model_callback.clone()/>},
                         AppRoute::Games => html!{<Games user_info=user_info.clone() model_callback=model_callback.clone()/>},
@@ -181,6 +192,8 @@ impl Component for Model {
 
 #[derive(Debug, Switch, Clone)]
 pub enum AppRoute {
+    #[to = "/profile/edit/{id}"]
+    Edit(String),
     #[to = "/profile/{id}"]
     Profile(String),
     #[to = "/game/{id}"]

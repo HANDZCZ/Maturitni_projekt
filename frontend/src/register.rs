@@ -264,7 +264,7 @@ impl Component for Register {
                                     }
                                     409 => {
                                         notification(
-                                            "Email je již používán.".to_owned(),
+                                            "Email je již používán".to_owned(),
                                             Position::BottomLeft,
                                             Status::Warning,
                                             None,

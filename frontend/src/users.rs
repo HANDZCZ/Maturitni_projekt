@@ -217,7 +217,7 @@ impl User {
                                     html! {
                                         <a class="uk-button uk-button-danger">
                                             <RouterAnchor<AppRoute> route=AppRoute::Edit(self.id.clone())>
-                                                { "Upravit učet" }
+                                                { "Upravit účet" }
                                             </RouterAnchor<AppRoute>>
                                         </a>
                                     }

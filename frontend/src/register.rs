@@ -352,7 +352,7 @@ impl Component for Register {
         });
         html! {
             <Base user_info=&self.props.user_info active_nav=None background_image="pexels-felix-mittermeier-957002.jpg" model_callback=self.props.model_callback.clone()>
-        <div class="uk-container uk-section-secondary uk-padding-large uk-margin-medium-top uk-width-1-2@l">
+        <div class="uk-container uk-section-secondary uk-padding-large uk-margin-medium uk-width-1-2@l">
             <article class="uk-article">
                 <h1 class="uk-article-title uk-nav-center uk-margin-medium-bottom"> { "Registrovat se" }</h1>
                 <form class="uk-form-horizontal" onsubmit=submit>

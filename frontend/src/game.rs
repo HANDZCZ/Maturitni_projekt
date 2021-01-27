@@ -563,10 +563,10 @@ impl Component for Game {
 
     fn view(&self) -> Html {
         let symbols_html: [Html; 4] = [
-            html! { <span style="color: red;font-weight: bold">{ "X " }</span> },
-            html! { <span style="color: green;font-weight: bold">{ "Y " }</span> },
-            html! { <span style="color: blue;font-weight: bold">{ "Z " }</span> },
-            html! { <span style="color: yellow;font-weight: bold">{ "F " }</span> },
+            html! { <span style="color: red;font-weight: bold">{ "X" }</span> },
+            html! { <span style="color: green;font-weight: bold">{ "Y" }</span> },
+            html! { <span style="color: blue;font-weight: bold">{ "Z" }</span> },
+            html! { <span style="color: yellow;font-weight: bold">{ "F" }</span> },
         ];
 
         let on_move_html: Html =
@@ -648,9 +648,9 @@ impl Component for Game {
                                     }
                                 {
                                     let callback = self.link.callback(move |_| Msg::Clicked(x, y));
-                                    html! { <td onclick=callback>{ " " }</td> }
+                                    html! { <td onclick=callback></td> }
                                 } else {
-                                    html! { <td>{ " " }</td> }
+                                    html! { <td></td> }
                                 }
                             })
                     });
@@ -683,9 +683,13 @@ impl Component for Game {
             <div class="uk-grid-divider uk-grid">
                 <div class="uk-width-auto">
                     <style>{ r#"
+                        html {
+                            background-color: #545454;
+                        }
+
                         table tr td {
                             font-size: 27px;
-                            width: 40px;
+                            min-width: 40px;
                             text-align: center;
                             text-transform: uppercase;
                             border: 1px solid white;
@@ -697,9 +701,9 @@ impl Component for Game {
                             padding: 0;
                             border-collapse: collapse;
                         }
-
-                        body > div {
-                            padding-bottom: 1px;
+                        
+                        div.uk-width-auto::before {
+                            border: none !important;
                         }"# }
                     </style>
                     <table>

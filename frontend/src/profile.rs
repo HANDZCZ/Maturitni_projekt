@@ -247,7 +247,7 @@ impl Component for Profile {
                                     html! {
                                         <a class="uk-margin-auto-left uk-width-1-1@s uk-width-1-6@m uk-button uk-button-danger">
                                             <RouterAnchor<AppRoute> route=AppRoute::Edit(self.props.user_id.clone())>
-                                                { "Upravit učet" }
+                                                { "Upravit účet" }
                                             </RouterAnchor<AppRoute>>
                                         </a>
                                     }

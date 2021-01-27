@@ -98,7 +98,7 @@ impl Component for Edit {
             }
             Msg::EmailChanged(new) => {
                 self.email = new;
-                let new_valid = crate::regex::EMAIL_REGEX.is_match(&self.email).unwrap();
+                let new_valid = self.email.is_empty() || crate::regex::EMAIL_REGEX.is_match(&self.email).unwrap();
                 let render = self.email_valid != new_valid;
                 if render {
                     self.email_valid = new_valid;
@@ -107,7 +107,7 @@ impl Component for Edit {
             }
             Msg::PasswordChanged(new) => {
                 self.password = new;
-                let new_valid = crate::regex::PASSWORD_REGEX
+                let new_valid = self.password.is_empty() || crate::regex::PASSWORD_REGEX
                     .is_match(&self.password)
                     .unwrap();
                 let render = self.password_valid != new_valid;
@@ -120,7 +120,7 @@ impl Component for Edit {
             }
             Msg::NickChanged(new) => {
                 self.nick = new;
-                let new_valid = crate::regex::NICK_REGEX.is_match(&self.nick).unwrap();
+                let new_valid = self.nick.is_empty() || crate::regex::NICK_REGEX.is_match(&self.nick).unwrap();
                 let render = self.nick_valid != new_valid;
                 if render {
                     self.nick_valid = new_valid;
@@ -129,7 +129,7 @@ impl Component for Edit {
             }
             Msg::GenderChanged(new) => {
                 self.gender = new;
-                let new_valid = crate::regex::GENDER_REGEX.is_match(&self.gender).unwrap();
+                let new_valid = self.gender.is_empty() || crate::regex::GENDER_REGEX.is_match(&self.gender).unwrap();
                 let render = self.gender_valid != new_valid;
                 if render {
                     self.gender_valid = new_valid;
@@ -138,7 +138,7 @@ impl Component for Edit {
             }
             Msg::DescriptionChanged(new) => {
                 self.description = new;
-                let new_valid = crate::regex::DESCRIPTION_REGEX
+                let new_valid = self.description.is_empty() || crate::regex::DESCRIPTION_REGEX
                     .is_match(&self.description)
                     .unwrap();
                 let render = self.description_valid != new_valid;
@@ -352,6 +352,17 @@ impl Component for Edit {
             }
             Msg::Edited => {
                 self.ft = None;
+                if let Some(user_info) = &self.props.user_info {
+                    if self.props.user_id == user_info.uuid {
+                        self.props
+                            .model_callback
+                            .emit(crate::Msg::LoggedIn(UserInfo {
+                                uuid: user_info.uuid.clone(),
+                                nick: self.nick.clone(),
+                                roles: self.roles.clone(),
+                            }));
+                    }
+                }
                 notification(
                     "Úprava byla úspěšná".to_owned(),
                     Position::BottomLeft,
@@ -447,7 +458,7 @@ impl Component for Edit {
                             })
                         }
                     </div>
-                    <p class="uk-text-muted uk-margin-remove-bottom uk-margin-small-top uk-text-center">{"! Pokud role nejsou vyplněny odstraní se všechny role uživatele !"}</p>
+                    <p class="uk-text-muted uk-margin-remove-bottom uk-margin-small-top uk-text-center">{"! Pokud role nejsou vyplněny, odstraní se všechny role uživatele !"}</p>
                     <p class="uk-text-muted uk-margin-remove-top uk-text-center">{"Platí jen při zapnutí admin práv."}</p>
                 </div>
                 <div class="uk-flex-center uk-margin uk-nav-center">
@@ -460,7 +471,7 @@ impl Component for Edit {
         };
         html! {
             <Base user_info=&self.props.user_info active_nav=None background_image="pexels-aleksandar-pasaric-4201659.jpg" model_callback=self.props.model_callback.clone()>
-        <div class="uk-container uk-section-secondary uk-padding-large uk-margin-medium-top uk-width-1-2@l">
+        <div class="uk-container uk-section-secondary uk-padding-large uk-margin-medium uk-width-1-2@l">
             <article class="uk-article">
                 <h1 class="uk-article-title uk-nav-center uk-margin-medium-bottom"> { "Upravit profil" }</h1>
                 <p class="uk-nav-center uk-text-muted">{"Vynechaná pole nebudou změněna."}</p>

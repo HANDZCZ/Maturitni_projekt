@@ -221,7 +221,7 @@ a zpracovává veškeré příchozí informace.
 
 ## Redis
 
-V redisu jsou ukládány uživatelské relace, aby k nim byl rychlí přístup a rychlé jejich ověření.
+V redisu jsou ukládány uživatelské relace, aby k nim byl rychlý přístup a jejich ověření.
 
 ## Databáze
 
@@ -231,7 +231,7 @@ Diagram [@fig:er_diagram]
 
 ## Front-end
 
-Slouží pouze jako grafické zobrazení dat.
+Slouží jako grafické zobrazení dat a druhořadá kontrola dat.
 Zobrazuje informace o uživatelích a hrách.
 
 
@@ -239,37 +239,106 @@ Zobrazuje informace o uživatelích a hrách.
 
 # Zpracování praktické části
 
-## Správa uživatelů
+## Back-end
+
+### Správa uživatelů
 
 Uživatelé jsou umístěni v tabulce *users*.
 Role jsou uloženy v tabulce *roles* a jsou k uživatelům přiřazovány skrz tabulku *roles_to_users*.
 
 Pokud má uživatel roli *Admin* tak mohou upravovat kohokoli údaje bez omezení včetně rolí a hesla.
 
-## Vytváření žádostí o hru
+Pokud má uživatel roli *Banned* tak nemůže vytvářet pozvánky,
+ani nemůže být zahrnut do pozvánky jiným uživatelem.
+
+### Vytváření žádostí o hru
 
 Přihlášení uživatelé mají možnost vytvářet nové hry s různými parametry.
 
 Nejprve se vytvoří žádost o hru, která se nachází v tabulce *game_requests*.
 K dané žádosti na hru se přiřadí uživatelé skrz tabulku *users_to_game_requests*.
 
-## Vytvoření hratelné hry
+Pozvánky nemohou vytvářet uživatelé s rolí *Banned*.
 
-Po vytvoření žádosti o hru jí musí buď všichni hráči potvrdit a hra bude vytvořena,
-nebo někdo z pozvaných hráčů odmítne a žádost o hru bude vymazána.
+### Vytvoření hratelné hry
+
+Po vytvoření žádosti o hru jí musí všichni hráči potvrdit a hra bude vytvořena,
+nebo někdo z pozvaných hráčů odmítne žádost a žádost o hru bude vymazána.
 
 Jakmile je účast všech hráčů potvrzena, tak se vytvoří nová hra v tabulce *games*,
 přiřadí se k ní uživatelé skrz tabulku *games_to_users* a žádost o hru je poté vymazána.
 
-## Hraní hry
+### Hraní hry
 
-Hrát můžete jen když jste na tahu a dané políčko ještě nebylo použito.
+Hrát můžete jen když jste na tahu a pokud hrané políčko ještě nebylo použito.
 Vyhraní hry se kontroluje na front-endu, pokud front-end usoudí,
-že hráč vyhrál tak výhru oznámí backendu a ten výhru zkontroluje.
+že hráč vyhrál tak výhru oznámí back-endu a ten výhru zkontroluje.
 
-Backend kontroluje, jestli je hráč na tahu, jestli hra neskončila, nebo jestli jeho tah je validní.
+Back-end kontroluje, jestli je hráč na tahu, jestli hra neskončila, nebo jestli jeho tah je validní.
 V případě, že hráč ohlásí výhru, ale server zjistí, že lže, tak daný tah zahodí a odpoví chybou.
 
+
+## Front-end
+
+### Registrace
+
+Všechna pole jsou kontrolována. 
+Pokud nějaké pole není validní, tak se nepošlou data na back-end.
+
+Back-end data zkontroluje a pokud zjistí, že nejsou validní,
+tak žádost zahodí a vrátí chybu.
+
+Pro hashování hesla se používá 128 znaková sůl a algoritmus Argon2.
+
+### Profil
+
+Zobrazuje informace o uživateli a hry,
+ve kterých se nachází.
+
+Zobrazuje také počet výher, proher a remíz. 
+Z těchto dat poté vypočítá winrate (výhry / prohry).
+
+Pokud je uživatel na svém profilu, nebo pokud má uživatel roli *Admin*,
+tak se mu také zobrazí tlačítko na upravení profilu.
+
+### Výpis uživatelů
+
+Zobrazuje všechny registrované uživatele a pár informací o nich.
+
+Uživatelům s rolí *Admin* se navíc zobrazuje tlačítko upravení profilu.
+
+### Výpis her
+
+Zobrazuje všechny rozehrané, nebo dohrané hry s jejich hráči.
+
+### Hraní hry
+
+Hry jsou hrány na síti 30x30.
+
+Uživatelé jsou zobrazováni s jejich symbolem a za jménem je napsáno, jestli jsou na tahu.
+
+Hrát můžou jen uživatelé, kteří jsou v dané hře, ale dívat se může kdokoli.
+
+Tahy uživatelů jsou kontrolovány, jestli jsou validní a jestli nastala výhra nebo remíza.
+
+### Výpis pozvánek
+
+Zobrazuje název pozvánky (později název hry), počet tahů k vítězství.
+
+Uživatel může pozvánku přijmout, nebo odmítnout.
+
+### Vytváření pozvánky
+
+Při vytváření pozvánky jsou skoro všechna pole kontrolována.
+
+Uživatelé s rolí *Admin* mají práva na vypnutí skoro všech kontrol.
+
+### Úprava uživatele
+
+Uživatel může upravovat vše, kromě jeho rolí.
+
+Uživatel s rolí *Admin* může upravovat vše a má možnost vypnout kontrolu,
+která je vyžadována po ostatních uživatelích.
 
 \newpage
 

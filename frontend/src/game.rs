@@ -224,7 +224,6 @@ impl Component for Game {
                 match state {
                     PlayState::Won(_) | PlayState::Tie => {
                         self.data.ended = true;
-                        self.it = None;
                     }
                     _ => {}
                 }
@@ -597,7 +596,7 @@ impl Component for Game {
                 } else {
                     html! { { "" } }
                 };
-                html! { <p>{ symbols_html[i].clone() }{ name }{ on_move }</p> }
+                html! { <p>{ symbols_html[i].clone() }{ " " }{ name }{ on_move }</p> }
             });
 
         let game = {

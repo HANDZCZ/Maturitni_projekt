@@ -9,18 +9,19 @@ updates:
     directory: "/backend"
     schedule:
       interval: "daily"
+    # Disable all pull requests
+    open-pull-requests-limit: 0
 
   - package-ecosystem: "cargo"
     directory: "/frontend"
     schedule:
       interval: "daily"
-      
-  - package-ecosystem: "cargo"
-    directory: "/models"
-    schedule:
-      interval: "daily"
-
+    # Disable all pull requests
+    open-pull-requests-limit: 0
+     
   - package-ecosystem: "cargo"
     directory: "/roles"
     schedule:
       interval: "daily"
+    # Disable all pull requests
+    open-pull-requests-limit: 0

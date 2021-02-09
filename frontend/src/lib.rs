@@ -6,7 +6,7 @@ use yew::services::storage::{Area, StorageService};
 use yew_router::switch::Permissive;
 use yew_router::{prelude::*, Switch};
 
-#[wasm_bindgen(inline_js = r#"export function get_domain() { return DOMAIN; }"#)]
+#[wasm_bindgen(inline_js = r#"export function get_domain() { return API_DOMAIN; }"#)]
 extern "C" {
     fn get_domain() -> String;
 }

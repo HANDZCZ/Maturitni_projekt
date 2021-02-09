@@ -1,0 +1,1 @@
+docker run -it --rm -v %cd%/src:/workdir/src -v %cd%/Cargo.toml:/workdir/Cargo.toml -v %cd%/musl:/workdir/musl registry.gitlab.com/rust_musl_docker/image:stable-latest sh -c "cargo build --release --target=x86_64-unknown-linux-musl && cp target/x86_64-unknown-linux-musl/release/server musl/frontend"

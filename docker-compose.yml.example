@@ -1,0 +1,68 @@
+version: "3.7"
+services:
+  redis:
+    container_name: mp-redis
+    image: redis
+    restart: always
+    networks:
+      - backend
+    ports: []
+    volumes: []
+    entrypoint: redis-server --appendonly yes
+
+  postgres:
+    container_name: mp-postgres
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: maturitni_projekt
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres-data:/var/lib/postgresql/data
+    ports: []
+    networks:
+      - backend
+
+  backend:
+    container_name: mp-backend
+    image: handz/maturitni-projekt-backend
+    restart: always
+    environment:
+      #SERVER_ADDRES: 0.0.0.0:80
+      #RUST_LOG: info
+      AUTH_TTL: 3600
+      # Must have at least 32 bytes (min. 32 characters - 1 character is usualy 1 byte)
+      AUTH_KEY: keykeykeykeykeykeykeykeykeykeykey
+      REDIS_ADDRES: redis:6379
+      DATABASE_URL: postgres://root:password@postgres/maturitni_projekt
+      ALLOWED_ORIGIN: http://mp.loc
+      FRONTEND_DOMAIN: mp.loc
+    ports:
+      - "127.0.5.2:80:80"
+    networks:
+      - backend
+    depends_on:
+      - postgres
+      - redis
+
+  frontend:
+    container_name: mp-frontend
+    image: handz/maturitni-projekt-frontend
+    restart: always
+    environment:
+      #SERVER_ADDRES: 0.0.0.0:80
+      #RUST_LOG: info
+      #ACTIX_THREADPOOL: 
+      API_DOMAIN: http://api.mp.loc
+    ports:
+      - "127.0.5.1:80:80"
+    depends_on:
+      - backend
+
+networks:
+  backend:
+
+volumes:
+  postgres-data:

@@ -1,0 +1,46 @@
+body{
+    background-color: #545454;
+}
+
+.uk-navbar-container.uk-light:not(.uk-navbar-transparent):not(.uk-navbar-primary) {
+    background: #222;
+}
+
+.uk-dropdown.uk-light {
+    background: #222;
+}
+
+.uk-dropdown li {
+    padding-left: 5px;
+    border-left: 2px solid transparent;
+}
+
+.uk-dropdown li.uk-active {
+    border-color: #545454;
+}
+
+#mobile-navbar li {
+    padding-left: 5px;
+    border-left: 2px solid transparent;
+}
+
+#mobile-navbar li.uk-active {
+    border-color: #545454;
+}
+
+.uk-navbar a {
+	text-decoration: none
+}
+
+.uk-form-danger {
+    color: #f0506e !important;
+    border-color: #f0506e !important;
+}
+
+.uk-notification-message {
+	background: #222;
+}
+
+body > div {
+    padding-bottom: 1px;
+}

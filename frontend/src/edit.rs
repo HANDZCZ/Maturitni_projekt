@@ -98,7 +98,8 @@ impl Component for Edit {
             }
             Msg::EmailChanged(new) => {
                 self.email = new;
-                let new_valid = self.email.is_empty() || crate::regex::EMAIL_REGEX.is_match(&self.email).unwrap();
+                let new_valid = self.email.is_empty()
+                    || crate::regex::EMAIL_REGEX.is_match(&self.email).unwrap();
                 let render = self.email_valid != new_valid;
                 if render {
                     self.email_valid = new_valid;
@@ -107,9 +108,10 @@ impl Component for Edit {
             }
             Msg::PasswordChanged(new) => {
                 self.password = new;
-                let new_valid = self.password.is_empty() || crate::regex::PASSWORD_REGEX
-                    .is_match(&self.password)
-                    .unwrap();
+                let new_valid = self.password.is_empty()
+                    || crate::regex::PASSWORD_REGEX
+                        .is_match(&self.password)
+                        .unwrap();
                 let render = self.password_valid != new_valid;
                 if render {
                     self.password_valid = new_valid;
@@ -120,7 +122,8 @@ impl Component for Edit {
             }
             Msg::NickChanged(new) => {
                 self.nick = new;
-                let new_valid = self.nick.is_empty() || crate::regex::NICK_REGEX.is_match(&self.nick).unwrap();
+                let new_valid =
+                    self.nick.is_empty() || crate::regex::NICK_REGEX.is_match(&self.nick).unwrap();
                 let render = self.nick_valid != new_valid;
                 if render {
                     self.nick_valid = new_valid;
@@ -129,7 +132,8 @@ impl Component for Edit {
             }
             Msg::GenderChanged(new) => {
                 self.gender = new;
-                let new_valid = self.gender.is_empty() || crate::regex::GENDER_REGEX.is_match(&self.gender).unwrap();
+                let new_valid = self.gender.is_empty()
+                    || crate::regex::GENDER_REGEX.is_match(&self.gender).unwrap();
                 let render = self.gender_valid != new_valid;
                 if render {
                     self.gender_valid = new_valid;
@@ -138,9 +142,10 @@ impl Component for Edit {
             }
             Msg::DescriptionChanged(new) => {
                 self.description = new;
-                let new_valid = self.description.is_empty() || crate::regex::DESCRIPTION_REGEX
-                    .is_match(&self.description)
-                    .unwrap();
+                let new_valid = self.description.is_empty()
+                    || crate::regex::DESCRIPTION_REGEX
+                        .is_match(&self.description)
+                        .unwrap();
                 let render = self.description_valid != new_valid;
                 if render {
                     self.description_valid = new_valid;
@@ -354,13 +359,16 @@ impl Component for Edit {
                 self.ft = None;
                 if let Some(user_info) = &self.props.user_info {
                     if self.props.user_id == user_info.uuid {
+                        let mut new_user_info = user_info.clone();
+                        if self.use_admin {
+                            new_user_info.roles = self.roles.clone();
+                        }
+                        if !self.nick.is_empty() {
+                            new_user_info.nick = self.nick.clone();
+                        }
                         self.props
                             .model_callback
-                            .emit(crate::Msg::LoggedIn(UserInfo {
-                                uuid: user_info.uuid.clone(),
-                                nick: self.nick.clone(),
-                                roles: self.roles.clone(),
-                            }));
+                            .emit(crate::Msg::LoggedIn(new_user_info));
                     }
                 }
                 notification(

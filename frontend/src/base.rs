@@ -51,7 +51,7 @@ impl Component for Base {
     fn change(&mut self, props: Self::Properties) -> ShouldRender {
         let changed = self.props.user_info != props.user_info
             || self.props.active_nav != props.active_nav
-            || self.props.children != props.children;
+            || self.props.children != props.children
             || self.props.background_image != props.background_image;
         if changed {
             self.props = props;
@@ -85,7 +85,7 @@ impl Component for Base {
                                         {"Hry"}
                                     </RouterAnchor<AppRoute>>
                                     </li>
-                                    <li><a href="#"></a></li>
+                                    <li><a></a></li>
                                 </ul>
                             </div>
 
@@ -95,7 +95,7 @@ impl Component for Base {
 
                             <div class="uk-navbar-center-right">
                                 <ul class="uk-navbar-nav uk-visible@s">
-                                    <li><a href="#"></a></li>
+                                    <li><a></a></li>
                                         <li class={
                                             if let Some(ActiveNav::Users) = &self.props.active_nav {
                                                 "uk-active"
@@ -187,7 +187,7 @@ impl Component for Base {
                                     }
                                 }
                                 </li>
-                                <li><a href="#"></a></li>
+                                <li><a></a></li>
                             </ul>
                             <ul class="uk-navbar-nav uk-hidden@s">
                                 <li>
@@ -237,7 +237,7 @@ impl Component for Base {
                                         {"Uživatelé"}
                                     </RouterAnchor<AppRoute>>
                                 </li>
-                                <li><a href="#"></a></li>
+                                <li><a></a></li>
                                 <li>
                                     <hr/>
                                 </li>

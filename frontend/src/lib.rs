@@ -218,6 +218,6 @@ pub enum AppRoute {
 
 #[wasm_bindgen(start)]
 pub fn run_app() {
-    wasm_logger::init(wasm_logger::Config::default());
+    wasm_logger::init(wasm_logger::Config::new(log::Level::Error));
     yew::start_app::<Model>();
 }

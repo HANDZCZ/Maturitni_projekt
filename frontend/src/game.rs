@@ -562,14 +562,14 @@ impl Component for Game {
 
     fn view(&self) -> Html {
         let symbols_html: [Html; 4] = [
-            html! { <span style="color: red;font-weight: bold">{ "X" }</span> },
-            html! { <span style="color: green;font-weight: bold">{ "Y" }</span> },
-            html! { <span style="color: blue;font-weight: bold">{ "Z" }</span> },
-            html! { <span style="color: yellow;font-weight: bold">{ "F" }</span> },
+            html! { <span style="color: #b71c1c;font-weight: bold">{ "X" }</span> },
+            html! { <span style="color: #1B5E20;font-weight: bold">{ "Y" }</span> },
+            html! { <span style="color: #006064;font-weight: bold">{ "Z" }</span> },
+            html! { <span style="color: #F57F17;font-weight: bold">{ "F" }</span> },
         ];
 
         let on_move_html: Html =
-            html! { <span style="color: orange;font-weight: bold;">{ " #Na tahu#" }</span> };
+            html! { <span style="color: #E65100;font-weight: bold;">{ " #Na tahu#" }</span> };
 
         let on_move = {
             let index = self
@@ -691,7 +691,7 @@ impl Component for Game {
                             min-width: 40px;
                             text-align: center;
                             text-transform: uppercase;
-                            border: 1px solid white;
+                            border: 1px solid gray;
                             height: 40px;
                         }
 

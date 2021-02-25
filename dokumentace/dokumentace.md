@@ -21,13 +21,21 @@ header-includes: |
     \usepackage{pdfpages}
     \usepackage{setspace}
     \usepackage{indentfirst}
-    \usepackage{DejaVuSerifCondensed}
-    \usepackage[T1]{fontenc}
+    \setmainfont[
+        BoldFont={* Bold},
+        ItalicFont={* Italic},
+        BoldItalicFont={* BoldItalic}
+    ]{DejaVu Serif Condensed}
+    
+    \usepackage{fvextra}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+    
+    \usepackage[nosingleletter]{impnattypo}
 
 lang: cs-CZ
 pagestyle: empty
 
-#fontfamily:
+#fontfamily: helvet
 fontsize: 12pt
 geometry:
 - top=25mm
@@ -39,8 +47,8 @@ numbersections: true
 autoEqnLabels: true
 codeBlockCaptions: true
 
-lolTitle: Seznam příloh
-listingTitle: Příloha
+lolTitle: Seznam výpisů
+listingTitle: Výpis
 ---
 \setstretch{1.25}
 \newpage
@@ -125,10 +133,10 @@ je na tolik vyspělý, že se nejen zvládne vše, co jiné jazyky, ale i to, ž
 než konkurence.
 
 Vybral jsem si programování RESTful API serveru a front-endové webové aplikace
-z důvodu, že jsou to dne nejpoužívanější technologie a mají budoucnost.
+z důvodu, že jsou to dnes nejpoužívanější technologie a mají budoucnost.
 
 Téma Piškvorky jsem si vybral z více důvodů.
-Mělo by na něm jít perfektně předvést alespoň základy obou z frameworků.
+Mělo by na nich jít perfektně předvést alespoň základy obou z frameworků.
 Tato hra by měla být každému povědomá a nemusím se zabývat vysvětlováním pravidel.
 
 
@@ -214,18 +222,118 @@ API je poté napojené na databázi a redis.
 
 Front-end nemá sám o sobě žádný přístup k databázi nebo redisu.
 
+Celá aplikace je napsaná tak, aby bylo možné ji dát do kontejnerů.
+S pomocí kontejnerů je možné aplikaci libovolně a jednoduše škálovat.
+
 ## API
 
 API spojuje vše dohromady. Poskytuje veškeré informace front-endu
 a zpracovává veškeré příchozí informace.
 
+Ukládá a kontroluje uživatelské relace v redisu. Ukládá, upravuje a maže
+údaje v databázi.
+
 ## Redis
 
 V redisu jsou ukládány uživatelské relace, aby k nim byl rychlý přístup a jejich ověření.
+Každá relace má určitou životnost, kterou je možno změnit. V relaci je uložené id uživatele.
 
 ## Databáze
 
 Databáze ukládá informace o uživatelích a hrách pro dlouhodobé uložení dat.
+
+Tabulka *users* ukládá informace o uživatelích. S vlastnostmi: 
+
+\parskip 0pt
+
+- *id* - unikátní id uživatele,
+- *nick* - přezdívka uživatele,
+- *gender* - pohlaví uživatele,
+- *hash* - hashované heslo uživatele,
+- *salt* - sůl pro hashování hesla,
+- *email* - unikátní email uživatele,
+- *created_at* - čas vytvoření účtu uživatele,
+- *description* - popis uživatele.
+
+\parskip 12pt
+
+
+
+Tabulka *games* ukládá informace o hrách. S vlastnostmi:
+
+\parskip 0pt
+
+- *id* - unikátní id hry,
+- *name* - název hry,
+- *ended* - udává jestli hra skončila,
+- *last_played* - udává kdo naposled hrál,
+- *data* - data hry,
+- *created_at* - čas vytvoření hry,
+- *moves_needed* - počet tahů potřebných pro výhru,
+- *winner* - výherce.
+
+\parskip 12pt
+
+
+
+Tabulka *roles* ukládá role. S vlastnostmi:
+
+\parskip 0pt
+
+- *id* - unikátní id role,
+- *name* - unikátní jméno role.
+
+\parskip 12pt
+
+
+
+
+Tabulka *game_requests* ukládá informace o pozvánkách na hru. S vlastnostmi
+
+\parskip 0pt
+
+- *id* - unikátní id pozvánky,
+- *name* - název pozvánky,
+- *last_played* - ukládá kdy naposled hrál (určuje kdo "začal" - při stejném nastavení hry může pokaždé začínat někdo jiný)
+- *created_at* - čas vytvoření pozvánky,
+- *moves_needed* - počet tahů potřebných pro výhru.
+
+\parskip 12pt
+
+
+
+Tabulka *roles_to_users* spojuje tabulky *roles* a *users*. Přiřazuje uživatelům role. S vlastnostmi:
+
+\parskip 0pt
+
+- *user_id* - id uživatele,
+- *role_id* - id role.
+
+\parskip 12pt
+
+
+
+Tabulka *games_to_users* spojuje tabulky *games* a *users*. Přiřazuje hry k uživatelům. S vlastnostmi:
+
+\parskip 0pt
+
+- *game_id* - id hry,
+- *user_id* - id uživatele.
+
+\parskip 12pt
+
+
+
+Tabulka *users_to_game_requests* spojuje tabulky *game_requests* a *users*. Přiřazuje pozvánky k uživatelům. S vlastnostmi:
+
+\parskip 0pt
+
+- *user_id* - id uživatele,
+- *game_request_id* - id pozvánky,
+- *accepted* - udává zda uživatel pozvánku přijal.
+
+\parskip 12pt
+
 
 Diagram [@fig:er_diagram]
 
@@ -235,9 +343,120 @@ Slouží jako grafické zobrazení dat a druhořadá kontrola dat.
 Zobrazuje informace o uživatelích a hrách.
 
 
+## Administrace
+
+Každý uživatel co má roli *Admin* má zvýšená práva. Může upravovat ostatní uživatele,
+vytvářet pozvánky ve kterých nemusí být, nebo může obsahovat uživatele, 
+kteří nemohou být normálně přidáni do pozvánky. Může také vypnout skoro všechny kontroly,
+jako je formát jména, hesla, popisu uživatele, atd.
+
+## Design a responzivita
+
+Design a responzivita je řešená pomocí css knihovny UIkit (<https://getuikit.com/>). 
+Několik věcí je přepsáno pro vzhled aplikace. Tyto změny se nachází v souboru *uikit_addition.css*.
+
+uikit_addition.css [@lst:uikit_addition_css]
+
 \newpage
 
 # Zpracování praktické části
+
+## Použité technologie
+
+Skoro celá aplikace je naprogramovaná v jazyce Rust,
+jen databáze se píše v jazyce sql a má několik procedur.
+
+### Knihovna roles
+
+Mnou vytvořená knihovna, která při kompilaci načte role z databáze a převede je do datového typu ``enum``.
+
+- *quote* - poskytuje makro pro převod datových struktur jazyka Rust na tokeny zdrojového kódu
+- *syn* - je knihovna načítaní tokenů zdrojového kódu jazyka Rust do datového typy zdrojového kódu jazyka Rust
+- *proc-macro2* - umožňuje definovat makra
+- *dotenv* - načte ``.env`` soubor do proměnných prostředí
+- *postgres* - synchronní klient pro databázi PostgreSQL
+
+Zdrojový kód knihovny ``roles`` [@lst:roles_src]
+
+### Back-end
+
+Back-end je naprogramován celý v jazyce Rust.
+
+- *structopt* - získává parametry pro program z příkazového řádku, nebo z proměnných prostředí (Environment variables)
+- *dotenv* - načte ``.env`` soubor do proměnných prostředí
+- *thiserror* - slouží pro zacházení s chybami
+- *actix-web* - hlavní knihovna pro web server
+- *actix-redis* - používá se jako back-end pro knihovnu actix-session
+- *actix-session* - používá se pro zacházení s uživatelskými relacemi
+- *env_logger* - slouží jako back-end k výpisu akcí serveru (logging)
+- *time* - používá se pro práci s časem
+- *sqlx* - slouží k komunikaci s databází
+- *lazy_static* - je použit k vyhodnocování proměnných jen jednou a jen při použití
+- *fancy-regex* - slouží pro kontrolu dat pomocí regexu
+- *serde* - knihovna k serializaci datových struktur
+- *serde_json* - slouží k serializaci do formátu JSON
+- *futures-util* - nástroje pro práci s ``futures`` (asynchronní procesy)
+- *futures* - implementace ``futures`` knihovny a ``std::future``
+- *rand* - používá se pro generování náhodných věcí (čísel, vybírání položky s pole, atd.)
+- *argon2rs* - hashuje hesla pomocí algoritmu Argon2
+- *log* - používá se k výpisu akcí serveru (logging)
+- *serde_repr* - slouží k serializaci ``enum`` data typu
+- *bincode* - serializuje datové struktury do formátu bincode
+- *uuid* - používá se pro práci s univerzálními unikátními identifikátory (UUID)
+- *tokio* - slouží jako back-end pro asynchronní procesy
+- *roles* - mnou vytvořená knihovna, která při kompilaci načte role z databáze a převede je do datového typu ``enum``
+- *actix-cors* - implementace CORS (Cross-origin resource sharing) pravidel pro Actix Web
+
+### Front-end
+
+Front-end je naprogramován hlavně v jazyce Rust,
+ale využívají se tam i jiné jazyky, jako je HTML, CSS a JS.
+
+Rust knihovny:
+
+- *yew* - knihovna pro vytváření více vláknových front-endových webových aplikací s WebAssembly
+- *wasm-bindgen* - knihovna usnadňující interakci na vysoké úrovni mezi moduly wasm (WebAssembly) a JavaScriptem
+- *yew-router* - směrovací knihovna pro knihovnu yew
+- *wee_alloc* - alokátor pro WebAssembly
+- *wasm-logger* - slouží jako back-end pro k výpisu akcí do konzole prohlížeče
+- *log* - používá se k výpisu akcí serveru (logging)
+- *roles* - mnou vytvořená knihovna, která při kompilaci načte role z databáze a převede je do datového typu ``enum``
+- *lazy_static* - je použit k vyhodnocování proměnných jen jednou a jen při použití
+- *fancy-regex* - slouží pro kontrolu dat pomocí regexu
+- *serde* - knihovna k serializaci datových struktur
+- *serde_json* - slouží k serializaci do formátu JSON
+- *serde_repr* - slouží k serializaci ``enum`` data typu
+- *time* - používá se pro práci s časem
+- *bincode* - serializuje datové struktury do formátu bincode
+- *strum* - poskytuje sadu maker pro snadnější práci s datovými typy ``enum`` a ``String``
+
+CSS a JS knihovny:
+
+- *UIkit* - modulární front-end knihovna pro vývoj rychlých a výkonných webových rozhraní
+
+#### Server
+
+Speciálně vytvořený server pro správnou funkci front-endu.
+
+- *structopt* - získává parametry pro program z příkazového řádku, nebo z proměnných prostředí (Environment variables)
+- *dotenv* - načte ``.env`` soubor do proměnných prostředí
+- *actix-web* - hlavní knihovna pro web server
+- *env_logger* - slouží jako back-end k výpisu akcí serveru (logging)
+- *actix-files* - slouží k práci se statickými soubory
+- *thiserror* - slouží pro zacházení s chybami
+
+
+## Databáze
+
+Spousta akcí, které back-end podniká jsou řešené skrz procedury.
+Tímto způsobem dojde k zjednodušení kódu na back-endu
+a k provedení akce není potřeba dělat několik dotazů na databázi.
+
+Procedura pro vytvoření pozvánky [@lst:new_game_request_sql_procedure]
+
+Procedura pro úpravu uživatele [@lst:update_user_sql_procedure]
+
+Procedura pro úpravu pozvánky [@lst:update_invite_sql_procedure]
 
 ## Back-end
 
@@ -251,6 +470,8 @@ Pokud má uživatel roli *Admin* tak mohou upravovat kohokoli údaje bez omezen�
 Pokud má uživatel roli *Banned* tak nemůže vytvářet pozvánky,
 ani nemůže být zahrnut do pozvánky jiným uživatelem.
 
+Úprava uživatele po kontrole dat je poté řízena procedurou [@lst:update_user_sql_procedure].
+
 ### Vytváření žádostí o hru
 
 Přihlášení uživatelé mají možnost vytvářet nové hry s různými parametry.
@@ -260,6 +481,8 @@ K dané žádosti na hru se přiřadí uživatelé skrz tabulku *users_to_game_r
 
 Pozvánky nemohou vytvářet uživatelé s rolí *Banned*.
 
+Vytvoření pozvánky po kontrole dat je poté řízeno procedurou [@lst:new_game_request_sql_procedure]
+
 ### Vytvoření hratelné hry
 
 Po vytvoření žádosti o hru jí musí všichni hráči potvrdit a hra bude vytvořena,
@@ -268,6 +491,8 @@ nebo někdo z pozvaných hráčů odmítne žádost a žádost o hru bude vymaz�
 Jakmile je účast všech hráčů potvrzena, tak se vytvoří nová hra v tabulce *games*,
 přiřadí se k ní uživatelé skrz tabulku *games_to_users* a žádost o hru je poté vymazána.
 
+Úpravu pozvánky po kontrole dat je poté řízena procedurou [@lst:update_invite_sql_procedure]
+
 ### Hraní hry
 
 Hrát můžete jen když jste na tahu a pokud hrané políčko ještě nebylo použito.
@@ -275,7 +500,7 @@ Vyhraní hry se kontroluje na front-endu, pokud front-end usoudí,
 že hráč vyhrál tak výhru oznámí back-endu a ten výhru zkontroluje.
 
 Back-end kontroluje, jestli je hráč na tahu, jestli hra neskončila, nebo jestli jeho tah je validní.
-V případě, že hráč ohlásí výhru, ale server zjistí, že lže, tak daný tah zahodí a odpoví chybou.
+V případě, že hráč ohlásí výhru, ale server zjistí, že to tak není, tak daný tah zahodí a odpoví chybou.
 
 
 ## Front-end
@@ -309,13 +534,13 @@ Uživatelům s rolí *Admin* se navíc zobrazuje tlačítko upravení profilu.
 
 ### Výpis her
 
-Zobrazuje všechny rozehrané, nebo dohrané hry s jejich hráči.
+Zobrazuje všechny rozehrané, nebo dohrané hry s jejich hráči a stavem hry.
 
 ### Hraní hry
 
 Hry jsou hrány na síti 30x30.
 
-Uživatelé jsou zobrazováni s jejich symbolem a za jménem je napsáno, jestli jsou na tahu.
+Uživatelé jsou zobrazováni s jejich symbolem před jménem a za jménem je napsáno, jestli jsou na tahu.
 
 Hrát můžou jen uživatelé, kteří jsou v dané hře, ale dívat se může kdokoli.
 
@@ -323,7 +548,7 @@ Tahy uživatelů jsou kontrolovány, jestli jsou validní a jestli nastala výhr
 
 ### Výpis pozvánek
 
-Zobrazuje název pozvánky (později název hry), počet tahů k vítězství.
+Zobrazuje název pozvánky (později název hry), počet tahů k vítězství a id pozvánky.
 
 Uživatel může pozvánku přijmout, nebo odmítnout.
 
@@ -339,6 +564,151 @@ Uživatel může upravovat vše, kromě jeho rolí.
 
 Uživatel s rolí *Admin* může upravovat vše a má možnost vypnout kontrolu,
 která je vyžadována po ostatních uživatelích.
+
+\newpage
+
+# Manuál
+
+Aplikace se dá spustit více způsoby. Buď kompilací ze zdrojového kódu, nebo pomocí kontejnerů.
+
+## Instalace potřebných nástrojů
+
+### Kompilace
+
+Pro kompilaci potřebujeme nainstalovat kompilátor jazyka Rust.
+
+Přejdeme na stránku stažení jazyka Rust <https://www.rust-lang.org/tools/install>
+a stáhneme exe soubor.
+
+Otevřeme a zadáme 1 pro instalaci a stiskneme enter.
+
+Po dokončení instalace všech komponentů nainstalujeme ještě wasm-pack pro kompilaci do WebAssembly.
+
+Přejdeme na stránku stažení nástroje wasm-pack <https://rustwasm.github.io/wasm-pack/installer/>
+a stáhneme exe soubor.
+
+Po stažení jej nainstalujeme.
+
+### Použití kontejnerů
+
+Pro použití kontejnerů potřebujeme nějaký software, který to umožňuje. Já jsem zvolil docker.
+
+Přejdeme na stránku stažení <https://hub.docker.com/editions/community/docker-ce-desktop-windows/>
+a stáhneme exe soubor.
+
+Nainstalujeme a vyzkoušíme funkčnost (Hello world! kontejner).
+
+## Příprava
+
+### Kompilace
+
+Kompilace není potřeba při použití kontejnerů.
+
+Pro kompilaci aplikace je potřeba mít databázi připravenou dopředu.
+Stačí se přihlásit do administrace databáze a spustit sql příkazy v přiloženém sql souboru.
+
+Zkompilujeme back-end. Vstoupíme do složky ``backend`` a spustíme příkaz:
+
+```bash
+cargo build --release
+```
+
+: Příkaz pro kompilaci back-endu {#lst:back-end_compile_command}
+
+Zkompilujeme front-end server. Vstoupíme do složky ``frontend/server`` a spustíme příkaz:
+
+```bash
+cargo build --release
+```
+
+: Příkaz pro kompilaci front-end serveru {#lst:front-end_server_compile_command}
+
+Zkompilujeme front-end. Vstoupíme do složky ``frontend`` a spustíme příkaz:
+
+```
+build.bat
+```
+
+: Příkaz pro kompilaci front-endu {#lst:front-end_compile_command}
+
+\newpage
+
+### Použití kontejnerů
+
+Pro jednoduché použití používám docker-compose.
+
+Pro jednoduchou konfiguraci jsem vytvořil funkční příklad nastavení.
+
+Tento příklad si zkopírujeme a přejmenujeme z ``docker-compose.yml.example``
+na ``docker-compose.yml``.
+
+Potom si ho upravíme podle vlastních preferencí.
+
+Změníme tyto položky:
+
+```.yaml
+# Databáze
+POSTGRES_USER: root             # Jméno uživatele databáze
+POSTGRES_PASSWORD: password     # Heslo uživatele databáze
+
+# Back-end
+AUTH_TTL: 3600                  # Jak dlouho bude platit uživatelská relace v sekundách
+AUTH_KEY: keykeykeykeykeykeykeykeykeykeykey   # Klíč pro uživatelské relace, musí mít minimálně 32 bajtů (32 znaků)
+DATABASE_URL: postgres://root:password@postgres/maturitni_projekt   # Změníme jméno a heslo na to které jsme zvolili u databáze
+ALLOWED_ORIGIN: http://mp.loc   # Adresa front-endu pro správné nastavení CORS
+FRONTEND_DOMAIN: mp.loc         # Adresa front-endu bez protokolu pro přístup ke cookies na front-endu
+
+# Front-end
+API_DOMAIN: http://api.mp.loc   # Adresa back-endu pro komunikaci mezi front-endem a back-endem
+```
+
+: Nastavení proměnných prostředí pro kontejnery {#lst:container_env_config}
+
+\newpage
+
+Poté taky změníme překládání portů, abychom se na aplikaci vůbec dostali.
+
+```.yaml
+backend:
+  ports:
+    - "127.0.5.2:80:80" # Toto znamená překládej port 80 na adresu a port 127.0.5.2:80
+
+frontend:
+  ports:
+    - "127.0.5.1:80:80" # Toto znamená překládej port 80 na adresu a port 127.0.5.1:80
+```
+
+: Nastavení překládání portů pro kontejnery {#lst:container_port_forwarding_config}
+
+Samozřejmě tato aplikace má být postavená například za nginx server.
+Ale pokud jen testujeme na svém počítači tak můžeme do souboru ``hosts`` přidat tyto položky:
+
+```
+127.0.5.1 mp.loc
+127.0.5.2 api.mp.loc
+```
+
+: Úprava hosts souboru pro kontejnery {#lst:container_port_forwarding_config}
+
+## Spuštění
+
+### Kompilace
+
+Musíme mít spuštěnou databázi a redis.
+
+1. Spustíme back-end. Stačí jen spustit exe soubor a popřípadě dodat další argumenty.
+
+1. Spustíme front-end server. Stačí jen spustit exe soubor a popřípadě dodat další argumenty.
+
+### Použití kontejnerů
+
+Spustíme příkaz, který nám stáhne, nastartuje a nakonfiguruje veškeré kontejnery:
+
+```bash
+docker-compose up -d
+```
+
+: Příkaz pro start kontejnerů {#lst:container_start_command}
 
 \newpage
 
@@ -359,8 +729,10 @@ která je vyžadována po ostatních uživatelích.
 | Zkratka | Význam |
 |-:|:---------|
 API | Application Programming Interface
+CORS | Cross-origin resource sharing
 REST | Representational State Transfer
 SPŠE | Střední průmyslová škola elektrotechnická
+UUID | Universally unique identifier
 VOŠ | Vysoká odborná škola
 
 : Seznam použitých zkratek {#tbl:seznam_použitých_zkratek}
@@ -381,3 +753,193 @@ VOŠ | Vysoká odborná škola
 # Přílohy
 
 ![ER Diagram](diagram.png){#fig:er_diagram}
+
+```{.css .numberLines}
+body {
+    background-color: #545454;
+}
+.uk-navbar-container.uk-light:not(.uk-navbar-transparent) :not(.uk-navbar-primary) {
+    background: #222;
+}
+.uk-dropdown.uk-light {
+    background: #222;
+}
+.uk-dropdown li {
+    padding-left: 5px;
+    border-left: 2px solid transparent;
+}
+.uk-dropdown li.uk-active {
+    border-color: #545454;
+}
+#mobile-navbar li {
+    padding-left: 5px;
+    border-left: 2px solid transparent;
+}
+#mobile-navbar li.uk-active {
+    border-color: #545454;
+}
+.uk-navbar a {
+	text-decoration: none
+}
+.uk-form-danger {
+    color: #f0506e !important;
+    border-color: #f0506e !important;
+}
+.uk-notification-message {
+	background: #222;
+}
+body > div {
+    padding-bottom: 1px;
+}
+```
+
+: uikit_addition.css {#lst:uikit_addition_css}
+
+
+```{.sqlpostgresql .numberLines}
+create procedure new_game_request(_name text, _last_played uuid, _users_id uuid[], _moves_needed smallint)
+    language plpgsql
+as
+$$
+declare
+    v_game_request_id uuid;
+begin
+    insert into game_requests (name, last_played, moves_needed)
+    values (_name, _last_played, _moves_needed)
+    returning game_requests.id into v_game_request_id;
+
+    insert into users_to_game_requests (user_id, game_request_id)
+    select user_id__, v_game_request_id
+    from unnest(_users_id) user_id__;
+    commit;
+end;
+$$;
+```
+
+: Procedura pro vytvoření pozvánky {#lst:new_game_request_sql_procedure}
+
+
+```{.sqlpostgresql .numberLines}
+create procedure update_user(_id uuid, _nick text DEFAULT NULL::text, _gender text DEFAULT NULL::text, _email text DEFAULT NULL::text, _hash bytea DEFAULT NULL::bytea, _salt character varying DEFAULT NULL::character varying, _roles integer[] DEFAULT NULL::integer[], _description text DEFAULT NULL::text)
+    language plpgsql
+as
+$$
+begin
+    if _nick is not null then
+        update users set nick = $2 where id = $1;
+    end if;
+
+    if _gender is not null then
+        update users set gender = $3 where id = $1;
+    end if;
+    
+    if _email is not null then
+        update users set email = $4 where id = $1;
+    end if;
+    
+    if _hash is not null then
+        update users set hash = $5 where id = $1;
+    end if;
+    
+    if _salt is not null then
+        update users set salt = $6 where id = $1;
+    end if;
+    
+    if _description is not null then
+        update users set description = _description where id = _id;
+    end if;
+
+    if _roles is not null then
+        delete from roles_to_users where user_id = _id;
+        insert into roles_to_users (user_id, role_id) select _id, role_id__ FROM unnest(_roles) role_id__;
+    end if;
+    
+    commit;
+end;
+$$;
+```
+
+: Procedura pro úpravu uživatele {#lst:update_user_sql_procedure}
+
+
+```{.sqlpostgresql .numberLines}
+create procedure update_invite (_user_id uuid, _game_request_id uuid, _accepted boolean, _data bytea)
+    language plpgsql
+as
+$$
+declare
+    v_ready   bool;
+    v_game_id uuid;
+    v_exists  bool;
+begin
+    select exists(select * from users_to_game_requests where game_request_id = _game_request_id and user_id = _user_id)
+    into v_exists;
+    if not v_exists then
+        raise exception 'User with id ''%'' is not part of game request with id ''%'' or game request with id ''%'' doesn''t exists', _user_id, _game_request_id, _game_request_id;
+    end if;
+    if _accepted then
+        update users_to_game_requests set accepted = true where user_id = _user_id and game_request_id = _game_request_id;
+        select not exists(
+            select * from users_to_game_requests where game_request_id = _game_request_id and not accepted
+        ) into v_ready;
+        if v_ready then
+            insert into games (name, data, last_played, moves_needed) select name, _data, last_played, moves_needed from game_requests where game_requests.id = _game_request_id returning games.id into v_game_id;
+            insert into games_to_users (user_id, game_id) select users_to_game_requests.user_id, v_game_id from users_to_game_requests where game_request_id = _game_request_id;
+            delete from users_to_game_requests where game_request_id = _game_request_id;
+            delete from game_requests where id = _game_request_id;
+        end if;
+    else
+        delete from users_to_game_requests where game_request_id = _game_request_id;
+        delete from game_requests where id = _game_request_id;
+    end if;
+    commit;
+end;
+$$;
+```
+
+: Procedura pro úpravu pozvánky {#lst:update_invite_sql_procedure}
+
+
+```{.rust .numberLines}
+use postgres::{Client, NoTls};
+use proc_macro::TokenStream;
+use proc_macro2::Span;
+use quote::quote;
+use syn::punctuated::Punctuated;
+use syn::{parse_macro_input, parse_quote, Ident, ItemEnum};
+
+#[proc_macro_attribute]
+pub fn get_roles_from_db(_attr: TokenStream, item: TokenStream) -> TokenStream {
+    dotenv::dotenv().expect("Dotenv error");
+    let mut parsed_enum = parse_macro_input!(item as ItemEnum);
+
+    let database_url = std::env::var("DATABASE_URL").expect("Missing env variable DATABASE_URL");
+
+    let mut client = Client::connect(&database_url, NoTls).expect("Couldn't create pool");
+
+    let mut variants = Punctuated::new();
+    for row in client
+        .query("select name, id from roles", &[])
+        .expect("Couldn't get roles from db")
+    {
+        let name = Ident::new(row.get(0), Span::call_site());
+        let id: i16 = row.get(1);
+        let variant: syn::Variant = parse_quote! {
+            #name = #id as i32
+        };
+        variants.push(variant);
+    }
+
+    parsed_enum.variants = variants;
+
+    (quote! {
+        #parsed_enum
+    })
+    .into()
+}
+```
+
+: Zdrojový kód knihovny ``roles`` {#lst:roles_src}
+
+
+

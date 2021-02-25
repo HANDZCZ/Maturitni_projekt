@@ -25,10 +25,12 @@ pub async fn get(pool: Data<PgPool>, Path(id): Path<uuid::Uuid>) -> impl Respond
        winner,
        moves_needed,
        (
-           select jsonb_agg(json_build_array(u.nick, user_id))
-           from games_to_users
-                    join users u on games_to_users.user_id = u.id
-           where game_id = $1
+           select jsonb_agg(json_build_array(nick, user_id))
+           from (select u.nick, user_id
+                 from games_to_users
+                          join users u on games_to_users.user_id = u.id
+                 where game_id = $1
+                 order by user_id) temp
        ) players
 from games
 where id = $1"#,

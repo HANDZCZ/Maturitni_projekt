@@ -1,12 +1,46 @@
 ---
 #title: Piškvorky
+#numbertitlepage: false
 #subtitle: | 
-#    MATURITNÍ PRÁCE – APLIKACE
+#    MATURITNÍ PRÁCE – PROGRAMOVÁNÍ
 #    
 #    Střední průmyslová škola elektrotechnická a Vyšší odborná škola Pardubice
 #date: Březen 2021
-#author:
-#- Jan Najman
+author:
+- Jan Najman
+#thanks:
+
+#bookmarksopen: true
+#bookmarkopenlevel: 2
+pdfcreator: LaTeX via pandoc, made with care and extra sugar on top
+# Overides author (on meta)
+#author-meta:
+title-meta: Piškvorky
+keywords:
+- Rust
+- API
+- RESTful
+- Actix
+- Actix Web
+- Web
+- Server
+- Application
+- Front-end
+- programming
+- framework
+- Yew
+subject: Maturitní práce na téma Piškvorky
+colorlinks: true
+# Maroon
+linkcolor: Maroon
+# Maroon
+filecolor: Maroon
+# Blue
+citecolor: Blue
+# Blue
+urlcolor: Blue
+# Defaults to linkcolor
+toccolor: Black
 
 header-includes: |
     \usepackage{float}
@@ -32,6 +66,9 @@ header-includes: |
     
     \usepackage[nosingleletter]{impnattypo}
 
+    \newfontfamily\emojifont[Renderer=Harfbuzz]{Noto Color Emoji}
+    \DeclareTextFontCommand{\emoji}{\emojifont}
+
 lang: cs-CZ
 pagestyle: empty
 
@@ -42,6 +79,9 @@ geometry:
 - right=20mm
 - left=30mm
 - bottom=25mm
+toc-depth: 6
+nocite: '@*'
+link-citations: true
 
 numbersections: true
 autoEqnLabels: true
@@ -49,6 +89,10 @@ codeBlockCaptions: true
 
 lolTitle: Seznam výpisů
 listingTitle: Výpis
+# Defaults to linkcolor
+lotcolor: Black
+# Defaults to linkcolor
+lofcolor: Black
 ---
 \setstretch{1.25}
 \newpage
@@ -91,7 +135,7 @@ Keywords: Rust, API, RESTful, Actix, Actix Web, Web, Server, Application, Front-
 Front-end applications, programming, framework, Yew
 
 \newpage
-\tableofcontents
+\toc
 \newpage
 \pagestyle{plain}
 
@@ -126,7 +170,7 @@ PHP | 596 %
 Python 3.5 | 1800 %
 Python 2.7 | 2562 %
 
-: Porovnání rychlosti jazyků {#tbl:porovnani_rychlosti_jazyku}
+: Porovnání rychlosti jazyků [@performance_benchmark] {#tbl:porovnani_rychlosti_jazyku}
 
 Rozhodl jsem se ukázat, že systémový programovací jazyk Rust
 je na tolik vyspělý, že se nejen zvládne vše, co jiné jazyky, ale i to, že je rychlejší
@@ -238,6 +282,8 @@ Ukládá a kontroluje uživatelské relace v redisu. Ukládá, upravuje a maže
 V redisu jsou ukládány uživatelské relace, aby k nim byl rychlý přístup a jejich ověření.
 Každá relace má určitou životnost, kterou je možno změnit. V relaci je uložené id uživatele.
 
+\newpage
+
 ## Databáze
 
 Databáze ukládá informace o uživatelích a hrách pro dlouhodobé uložení dat.
@@ -265,7 +311,7 @@ Tabulka *games* ukládá informace o hrách. S vlastnostmi:
 
 - *id* - unikátní id hry,
 - *name* - název hry,
-- *ended* - udává jestli hra skončila,
+- *ended* - udává, jestli hra skončila,
 - *last_played* - udává kdo naposled hrál,
 - *data* - data hry,
 - *created_at* - čas vytvoření hry,
@@ -330,7 +376,7 @@ Tabulka *users_to_game_requests* spojuje tabulky *game_requests* a *users*. Při
 
 - *user_id* - id uživatele,
 - *game_request_id* - id pozvánky,
-- *accepted* - udává zda uživatel pozvánku přijal.
+- *accepted* - udává, zda uživatel pozvánku přijal.
 
 \parskip 12pt
 
@@ -345,14 +391,14 @@ Zobrazuje informace o uživatelích a hrách.
 
 ## Administrace
 
-Každý uživatel co má roli *Admin* má zvýšená práva. Může upravovat ostatní uživatele,
+Každý uživatel, co má roli *Admin* má zvýšená práva. Může upravovat ostatní uživatele,
 vytvářet pozvánky ve kterých nemusí být, nebo může obsahovat uživatele, 
 kteří nemohou být normálně přidáni do pozvánky. Může také vypnout skoro všechny kontroly,
-jako je formát jména, hesla, popisu uživatele, atd.
+jako je formát jména, hesla, popisu uživatele atd.
 
 ## Design a responzivita
 
-Design a responzivita je řešená pomocí css knihovny UIkit (<https://getuikit.com/>). 
+Design a responzivita je řešená pomocí css knihovny UIkit [@uikit_docs].
 Několik věcí je přepsáno pro vzhled aplikace. Tyto změny se nachází v souboru *uikit_addition.css*.
 
 uikit_addition.css [@lst:uikit_addition_css]
@@ -365,6 +411,26 @@ uikit_addition.css [@lst:uikit_addition_css]
 
 Skoro celá aplikace je naprogramovaná v jazyce Rust,
 jen databáze se píše v jazyce sql a má několik procedur.
+
+### Rust
+
+Rust je víceúčelový, kompilovaný programovací jazyk, vyvinutý organizací Mozilla Research.
+Je navržen jako bezpečný a paralelní programovací jazyk.
+Podporuje funkcionální, imperativně-procedurální, strukturované
+a objektově orientované programování.
+
+Vývoj je sponzorován Mozillou, ale jde o open source projekt.
+Velké množství příspěvků pochází od členů komunity.
+
+
+### SQL
+
+SLQ je jazyk specificky určený ke správě dat uchovávaných v systému správy relačních databází.
+Je obzvláště užitečný při zpracování strukturovaných dat.
+Dat zahrnujících vztahy mezi subjekty a proměnnými.
+
+Umožňuje přístupu k mnoha záznamům pomocí jediného příkazu.
+Vylučuje potřebu specifikovat, jak dosáhnout záznamu, např. s indexem nebo bez něj.
 
 ### Knihovna roles
 
@@ -390,14 +456,14 @@ Back-end je naprogramován celý v jazyce Rust.
 - *actix-session* - používá se pro zacházení s uživatelskými relacemi
 - *env_logger* - slouží jako back-end k výpisu akcí serveru (logging)
 - *time* - používá se pro práci s časem
-- *sqlx* - slouží k komunikaci s databází
+- *sqlx* - slouží ke komunikaci s databází
 - *lazy_static* - je použit k vyhodnocování proměnných jen jednou a jen při použití
 - *fancy-regex* - slouží pro kontrolu dat pomocí regexu
 - *serde* - knihovna k serializaci datových struktur
 - *serde_json* - slouží k serializaci do formátu JSON
 - *futures-util* - nástroje pro práci s ``futures`` (asynchronní procesy)
 - *futures* - implementace ``futures`` knihovny a ``std::future``
-- *rand* - používá se pro generování náhodných věcí (čísel, vybírání položky s pole, atd.)
+- *rand* - používá se pro generování náhodných věcí (čísel, vybírání položky z pole atd.)
 - *argon2rs* - hashuje hesla pomocí algoritmu Argon2
 - *log* - používá se k výpisu akcí serveru (logging)
 - *serde_repr* - slouží k serializaci ``enum`` data typu
@@ -406,6 +472,8 @@ Back-end je naprogramován celý v jazyce Rust.
 - *tokio* - slouží jako back-end pro asynchronní procesy
 - *roles* - mnou vytvořená knihovna, která při kompilaci načte role z databáze a převede je do datového typu ``enum``
 - *actix-cors* - implementace CORS (Cross-origin resource sharing) pravidel pro Actix Web
+
+\newpage
 
 ### Front-end
 
@@ -445,7 +513,6 @@ Speciálně vytvořený server pro správnou funkci front-endu.
 - *actix-files* - slouží k práci se statickými soubory
 - *thiserror* - slouží pro zacházení s chybami
 
-
 ## Databáze
 
 Spousta akcí, které back-end podniká jsou řešené skrz procedury.
@@ -457,6 +524,156 @@ Procedura pro vytvoření pozvánky [@lst:new_game_request_sql_procedure]
 Procedura pro úpravu uživatele [@lst:update_user_sql_procedure]
 
 Procedura pro úpravu pozvánky [@lst:update_invite_sql_procedure]
+
+\newpage
+
+## Datové struktury
+
+### Enum
+
+Datový typ ``enum`` v Rustu je podobný jako v jiných kompilovaných jazycích, jako je C,
+ale má důležité rozdíly, díky nimž je podstatně výkonnější.
+To, co Rust nazývá enumy, je běžněji známé jako algebraické datové typy,
+pokud přicházíte z pozadí funkčního programování.
+Důležitým detailem je, že každá varianta enumu může mít k sobě další data.
+
+```{.rust .numberLines}
+enum JednoduchyEnum {
+    PrvniVarianta,
+    DruhaVarianta,
+    TretiVarianta,
+}
+
+enum Lokace {
+    Neznama,
+    Anonymni,
+    Znama(Mesto),
+}
+
+enum KomplexniEnum {
+    Nic,
+    Neco(u32),
+    HodneVeci {
+        publikovat: bool,
+        text: String,
+    }
+}
+```
+
+: Rust - datový typ ``enum`` {#lst:rust_data_type_enum}
+
+První enum je obvyklý druh enumu, který najdete například v jazyce C.
+
+Druhý ukazuje hypotetický příklad něčeho, co ukládá údaje o poloze,
+přičemž ``Mesto`` je jakýkoli jiný typ, který je potřeba, například ``struct``.
+
+Třetí příklad ukazuje druh dat, které může varianta ukládat, od ničeho, přes tuple, až po anonymní strukturu.
+
+\newpage
+
+### Struct
+
+Datový typ ``struct`` v Rustu můžeme nalézt ve třech druzích. Regulární s jmennými vlastnostmi, takzvané tuple struktury a unit struktury.
+
+```{.rust .numberLines}
+struct Regulární {
+    vlastnost1: f32,
+    vlastnost2: String,
+    pub vlastnost3: bool
+}
+
+struct Tuple(u32, String);
+
+struct Unit;
+```
+
+: Rust - datový typ ``struct`` {#lst:rust_data_type_struct}
+
+Regulární struktury jsou nejvíce používané.
+Každá vlastnost je definována jménem a typem,
+poté se k daným vlastnostem dá dostat pomocí
+``struktura.vlastnost``.
+
+Všechny vlastnosti struktury sdílejí stejnou proměnlivost jako samotná struktura,
+takže ``struktura.vlastnost = 2;`` by bylo validní, jen když by celá struktura byla proměnlivá.
+Přidáním ``pub`` před jméno vlastnosti způsobí,
+že daná vlastnost je viditelná i v jiných modulech a je možno jí přímo číst nebo měnit.
+
+Tuple struktury jsou podobné to regulárním strukturám, ale jejich vlastnosti nemají žádná jména.
+Pro přístup k vlastnostem se použije pozice vlastnosti, začínající od nuly ``struktura.0``, ``struktura.1`` atd.
+
+Unit struktury jsou hlavně používány jako markery.
+Nemají žádnou velikost, ale můžou být instancovány,
+to z nich dělá typ stejný jako ``unit - ()``.
+Jsou užitečné, když potřebujete implementovat ``trait`` na něčem,
+ale nepotřebujete ukládat žádná data.
+
+### Trait
+
+Trait je jako interface, který datové typy mohou implementovat.
+
+Traity můžou být složeny až ze tří druhů položek:
+
+- funkce a metody
+- typy
+- konstanty
+
+Traity také mohou sloužit jako markery, nebo mohou nést jiné logiku, která není vyjádřená v jejich názvech.
+
+```{.rust .numberLines}
+struct Pes {
+    vaha_kg: u8,
+}
+struct Kocka {
+    jmeno: String,
+    vaha_g: u16,
+}
+trait Vaha {
+    fn vaha_v_kg(&self) -> f32;
+}
+impl Vaha for Pes {
+    fn vaha_v_kg(&self) -> f32 {
+        self.vaha_kg as f32
+    }
+}
+impl Vaha for Kocka {
+    fn vaha_v_kg(&self) -> f32 {
+        self.vaha_g as f32 / 1000f32
+    }
+}
+fn main() {
+    let kocka = Kocka {
+        jmeno: "Líza".into(),
+        vaha_g: 2000,
+    };
+    let pes = Pes {
+        vaha_kg: 2,
+    };
+    assert_eq!(kocka.vaha_v_kg(), pes.vaha_v_kg());
+}
+```
+
+: Rust - typ ``trait`` {#lst:rust_type_trait}
+
+\newpage
+
+### Type
+
+Definuje alias pro existující datový typ.
+
+```{.rust .numberLines}
+type Milimetr = u32;
+type Kilogram = u32;
+
+let m: Milimetr = 3;
+let k: Kilogram = 3;
+
+assert_eq!(m, k);
+```
+
+: Rust - ``type`` {#lst:rust_type_keyword}
+
+Nevytváří nové datové typy, proto se ve výše uvedeném příkladu tři milimetry rovnají třem kilogramům.
 
 ## Back-end
 
@@ -493,7 +710,7 @@ přiřadí se k ní uživatelé skrz tabulku *games_to_users* a žádost o hru j
 
 Úpravu pozvánky po kontrole dat je poté řízena procedurou [@lst:update_invite_sql_procedure]
 
-### Hraní hry
+### Hraní hry {#sec:practical_part_playing_game}
 
 Hrát můžete jen když jste na tahu a pokud hrané políčko ještě nebylo použito.
 Vyhraní hry se kontroluje na front-endu, pokud front-end usoudí,
@@ -505,15 +722,13 @@ V případě, že hráč ohlásí výhru, ale server zjistí, že to tak není, 
 
 ## Front-end
 
-### Registrace
+### Přihlášení
 
-Všechna pole jsou kontrolována. 
-Pokud nějaké pole není validní, tak se nepošlou data na back-end.
+Pole emailu je kontrolováno.
+Pokud pole není validní, tak se nepošlou data na back-end.
 
 Back-end data zkontroluje a pokud zjistí, že nejsou validní,
 tak žádost zahodí a vrátí chybu.
-
-Pro hashování hesla se používá 128 znaková sůl a algoritmus Argon2.
 
 ### Profil
 
@@ -565,9 +780,20 @@ Uživatel může upravovat vše, kromě jeho rolí.
 Uživatel s rolí *Admin* může upravovat vše a má možnost vypnout kontrolu,
 která je vyžadována po ostatních uživatelích.
 
+### Registrace
+
+Všechna pole jsou kontrolována.
+Pokud nějaké pole není validní, tak se nepošlou data na back-end.
+
+Back-end data zkontroluje a pokud zjistí, že nejsou validní,
+tak žádost zahodí a vrátí chybu.
+
+Pro hashování hesla se používá 128 znaková sůl a algoritmus Argon2.
+
+
 \newpage
 
-# Manuál
+# Manuál pro spuštění aplikace
 
 Aplikace se dá spustit více způsoby. Buď kompilací ze zdrojového kódu, nebo pomocí kontejnerů.
 
@@ -591,12 +817,15 @@ Po stažení jej nainstalujeme.
 
 ### Použití kontejnerů
 
-Pro použití kontejnerů potřebujeme nějaký software, který to umožňuje. Já jsem zvolil docker.
+Pro použití kontejnerů potřebujeme nějaký software, který to umožňuje spouštění kontejnerů a manipulaci s nimi.
+Já jsem zvolil docker, jeden z nejznámějších nástrojů pro používání a výrobu kontejnerů.
 
 Přejdeme na stránku stažení <https://hub.docker.com/editions/community/docker-ce-desktop-windows/>
 a stáhneme exe soubor.
 
 Nainstalujeme a vyzkoušíme funkčnost (Hello world! kontejner).
+
+\newpage
 
 ## Příprava
 
@@ -681,7 +910,9 @@ frontend:
 : Nastavení překládání portů pro kontejnery {#lst:container_port_forwarding_config}
 
 Samozřejmě tato aplikace má být postavená například za nginx server.
-Ale pokud jen testujeme na svém počítači tak můžeme do souboru ``hosts`` přidat tyto položky:
+Ale pokud jen testujeme na svém počítači,
+tak můžeme do souboru ``hosts`` přidat položky,
+pro přeložení adresy front-endu a back-endu:
 
 ```
 127.0.5.1 mp.loc
@@ -689,6 +920,8 @@ Ale pokud jen testujeme na svém počítači tak můžeme do souboru ``hosts`` p
 ```
 
 : Úprava hosts souboru pro kontejnery {#lst:container_port_forwarding_config}
+
+\newpage
 
 ## Spuštění
 
@@ -699,6 +932,10 @@ Musíme mít spuštěnou databázi a redis.
 1. Spustíme back-end. Stačí jen spustit exe soubor a popřípadě dodat další argumenty.
 
 1. Spustíme front-end server. Stačí jen spustit exe soubor a popřípadě dodat další argumenty.
+
+Pro jednoduché použití stačí vytvořit ``.env`` soubor,
+ze kterého se načtou hodnoty do proměnných prostředí.
+Program si je potom bere odtud.
 
 ### Použití kontejnerů
 
@@ -712,15 +949,265 @@ docker-compose up -d
 
 \newpage
 
+# Manuál pro používání aplikace
+
+Po spuštění aplikace přejdeme na doménu front-endu.
+
+![Hlavní stránka aplikace](usage_manual_home_page.png){#fig:usage_manual_home_page}
+
+## Přihlášení
+
+Vpravo nahoře klikneme na ``PŘIHLÁSIT SE`` a dostaneme se na stránku přihlášení.
+
+![Stránka přihlášení](usage_manual_login_page.png){#fig:usage_manual_login_page}
+
+Vyplníme údaje a klikneme na ``PŘIHLÁSIT``.
+
+### První přihlášení
+
+Pro první přihlášení se přihlásíme na administrátora s těmito údaji:
+
+```yaml
+EMAIL: r@r.r
+HESLO: root
+```
+
+: Údaje administrátora při prvním přihlášení {#lst:admin_credentials_first_login}
+
+![Stránka přihlášení - údaje administrátora](usage_manual_login_root_credentials.png){#fig:usage_manual_login_root_credentials}
+
+Po přihlášení změňte heslo a ostatní údaje,
+pokud tak neprovedete může dojít k odcizení administrátorského účtu!
+
+## Registrace
+
+Vpravo nahoře klikneme na ``PŘIHLÁSIT SE`` a dostaneme se na stránku přihlášení,
+poté klikneme na ``Ještě nemám účet!``
+
+Vyplníme veškeré údaje.
+
+Údaje jsou kontrolovány a musí odpovídat těmto parametrům:
+
+- *Nick* - musí obsahovat 3 až 12 znaků, povolené znaky jsou:
+    - malá písmena od ``a`` až po ``z``
+    - velká písmena od ``A`` až po ``Z``
+    - číslice od ``0`` až do ``9``
+- *Pohlaví* - musí obsahovat 1 až 50 znaků, povolené znaky jsou:
+    - malá písmena od ``a`` až po ``z`` včetně diakritiky
+    - velká písmena od ``A`` až po ``Z`` včetně diakritiky
+    - číslice od ``0`` až do ``9``
+    - speciální znaky ``&_-',.``, mezi tyto znaky patří také mezera
+- *Email* - musí obsahovat 5 až 25 znaků, musí být podle standardu ``RFC2822``
+- *Heslo* - musí obsahovat 8 až 25 znaků, musí obsahovat:
+    - 2 malá písmena
+    - 2 velká písmena
+    - 2 speciální znaky
+- *Heslo znovu* - musí mít stejnou hodnotu jako pole ``Heslo``
+- *Něco o vás* - musí obsahovat 20 až 650 znaků, povolené znaky jsou:
+    - malá písmena od ``a`` až po ``z`` včetně diakritiky
+    - velká písmena od ``A`` až po ``Z`` včetně diakritiky
+    - číslice od ``0`` až do ``9``
+    - speciální znaky ``&_-',.``, mezi tyto znaky patří také mezera
+
+![Stránka registrace](usage_manual_register_page.png){#fig:usage_manual_register_page}
+
+## Profil uživatele {#sec:usage_manual_profile_page}
+
+Na vlastní profil se můžeme dostat dvěma způsoby:
+
+1. Vpravo nahoře najedeme myší na své jméno, rozbalí se nám nabídka a klikneme na ``Profil``.
+2. Nahoře uprostřed klikneme na ``UŽIVATELÉ``, najdeme se v seznamu uživatelů a klikneme na své jméno.
+
+![Stránka profilu](usage_manual_profile_page.png){#fig:usage_manual_profile_page}
+
+## Seznam uživatelů
+
+Na seznam uživatelů se dostaneme tak, že nahoře uprostřed klikneme na ``UŽIVATELÉ``.
+
+![Stránka seznamu uživatelů](usage_manual_users_page.png){#fig:usage_manual_users_page}
+
+### Administrátoři
+
+Administrátoři mají navíc vespodu každé karty uživatele ještě tlačítko pro úpravu profilu daného uživatele.
+
+![Stránka seznamu uživatelů - možnosti administrátora](usage_manual_users_admin_options.png){#fig:usage_manual_users_admin_options}
+
+## Úprava profilu
+
+Na stránce svého profilu ([@sec:usage_manual_profile_page]) klikneme na tlačítko ``UPRAVIT ÚČET``.
+
+![Stránka úpravy profilu](usage_manual_edit_profile_page.png){#fig:usage_manual_edit_users_page}
+
+### Administrátoři
+
+Administrátoři mají na konci stránky více možností úpravy.
+
+![Stránka úpravy profilu - možnosti administrátora](usage_manual_edit_profile_admin_options.png){#fig:usage_manual_edit_users_admin_options}
+
+## Seznam her
+
+Na seznam her se dostaneme tak, že nahoře uprostřed klikneme na ``HRY``.
+
+![Stránka seznamu her](usage_manual_games_page.png){#fig:usage_manual_games_page}
+
+## Seznam pozvánek {#sec:usage_manual_invites_page}
+
+Na seznam pozvánek se dostaneme tak, že vpravo nahoře najedeme myší na své jméno, rozbalí se nám nabídka a klikneme na ``Pozvánky``.
+
+![Stránka seznamu pozvánek](usage_manual_invites_page.png){#fig:usage_manual_invites_page}
+
+Pro přijetí pozvánky klikněte na fajfku (\emoji{✔}) a pro zamítnutí na křížek (\emoji{❌}).
+
+## Vytvoření pozvánky {#sec:usage_manual_new_invite_page}
+
+Na seznamu pozvánek ([@sec:usage_manual_invites_page]) klikneme na tlačítko ``NOVÁ POZVÁNKA``.
+
+Vyplníme veškeré údaje.
+
+Údaje jsou kontrolovány a musí odpovídat těmto parametrům:
+
+- *Jméno* - musí obsahovat 5 až 15 znaků, povolené znaky jsou:
+    - malá písmena od ``a`` až po ``z``
+    - velká písmena od ``A`` až po ``Z``
+    - číslice od ``0`` až do ``9``
+    - speciální znaky ``&_-',.``, mezi tyto znaky patří také mezera
+- *Počet tahů k vítězství* - musí být číslice od ``3`` až do ``8``
+- *UUID uživatelů* - tento údaj není kontrolovaný na front-endu, ale je kontrolovaný na back-endu,
+toto pole musí obsahovat:
+    - UUID uživatelů (lze získat ze seznamu uživatelů) oddělená novými řádky
+
+![Stránka vytvoření pozvánky](usage_manual_new_invite_page.png){#fig:usage_manual_new_invite_page}
+
+### Administrátoři
+
+Administrátoři mají na konci stránky více možností úpravy.
+
+![Stránka vytvoření pozvánky - možnosti administrátora](usage_manual_new_invite_admin_options.png){#fig:usage_manual_new_invite_admin_options}
+
+## Hraní hry
+
+Pro hraní hry musíte mít hru v probíhajícím stavu a být hráč dané hry.
+Pokud žádnou z takových her nemáte, můžete ji vytvořit ([@sec:usage_manual_new_invite_page]).
+
+Hru, kterou chcete hrát můžete najít na svém profilu ([@sec:usage_manual_profile_page]).
+Potom co jí najdete klikněte na tlačítko ``PŘEJÍT NA HRU``.
+
+![Stránka hraní hry](usage_manual_game_page.png){#fig:usage_manual_game_page}
+
+Před sebou bychom měli vidět mřížku a vpravo nebo pod ní seznam uživatelů.
+Před uživatelským jménem je jeho symbol a za jménem je napsáno, jestli je na tahu.
+
+Pod seznamem uživatelů můžeme vidět, kolik tahů potřebujeme k vítězství a jaký je status hry.
+
+\newpage
+
 # Závěr
 
+Tento projekt vznikl proto,
+aby ukázal, že frameworky v Rustu jsou dostatečně vyspělé
+a výkonnější něž alternativy.
+Tento fakt ukazuje i čím dál více rostoucí komunita
+a stránka "Are we *web* yet?" [@arewewebyet],
+která sleduje vývoj webových technologií v Rustu.
 
+Jedním z mých úkolů, také bylo držet se open source
+a s radostí mohu prohlásit, že se mi to úspěšně povedlo.
+
+Co se týče hlavních bodů maturitní práce,
+tak mohu bez starostí říci,
+že jsem je splnil do puntíku.
+
+1. "Hry se budou ukládat do databáze" - hry jsou uloženy v databázi PostgreSQL
+v tabulce *games*
+2. "Hry budou moct být hrány na tahy nebo odehrány v celku" - hry můžete odehrát v jedno sezení nebo ve více,
+nezáleží na tom, jak dlouho bude trvat 5 minut, nebo 5 let
+3. "Rozdělení uživatelů na přihlášené a nepřihlášené a administrátory" - uživatelé jsou rozděleni na nepřihlášené a přihlášené
+a pomocí role *Admin* na přihlášené a administrátory
+4. "Tahy hráčů budou kontrolovány na serveru" - tahy jsou kontrolovány [@sec:practical_part_playing_game]
+5. "Data odesílaná klientem nebo uživatelem budou mít co nejmenší velikost" - skoro všechna data jsou posílány ve formát JSON,
+data herního pole jsou posílána v ještě menším formátu bincode
+6. "Hry budou mít různé velikosti" - hry mohou být hrány na různý počet tahů
+7. "Každý přihlášený uživatel bude mít statistiky" - každý uživatel má počet výher,
+počet remíz a počet proher, z těchto dat je poté vypočítán winrate
+
+\newpage
+
+## Řešení problémů
+
+Při řešení tohoto tématu jsem narazil na pár problémů,
+které mě ale moc nevykolejily.
+Dalo by se říct, že jsem s nimi počítal.
+
+### Databáze
+
+Jedním ze závažnějších problémů byla databáze.
+Nejprve jsem pracoval s MySQL databází,
+ale později se ukázalo, že má mnoho limitací a nevýhod.
+
+Jednou z nich byla limitace datového typu string,
+neboli ``varchar`` (nebo ``char``), který neměl dostatečnou délku.
+Později jsem taky zjistil, že datový typ ``varchar`` při různých operacích
+je převáděn na datový typ ``char`` a zbité bajty jsou vyplněny.
+Takže místo porovnávání textu s různou délkou,
+dochází k porovnávání textu se stejnou délkou (255 znaků).
+MySQL má datový typ, který umožňuje ukládat delší text,
+ale jak s ním pracuje mi vůbec nevyhovovalo.
+
+Druhou z nevýhod byly procedury,
+které se v tomto jazyce nedají psát!
+Jakým způsobem se procedury píší nedává žádný smysl.
+Dokonce si dovoluji říct, že psát kód v assembly je jednodušší.
+
+Z výše uvedených důvodů jsem přešel na open source databázi PostgreSQL.
+Tato databáze vyřešila všechny mé problémy, a více.
+Díky této databázi jsem byl schopný použít pro id tabulek datový typ UUID,
+který nevyčerpám, ani když se budu snažit a také používat json data nativně.
+Mohu používat datový typ text, bez jakéhokoli problému,
+či snížení výkonu.
+Mohu vracet výsledky z insertů či updatů.
+Ale jedna z nejdůležitějších vlastností byla pro mě možnost psát procedury,
+které podporují základní věci jako je cyklus
+(viz. [@lst:new_game_request_sql_procedure;@lst:update_user_sql_procedure;@lst:update_invite_sql_procedure]).
+
+### Vyšší nápor na síť
+
+Další problém, na který jsem narazil,
+byla komunikace mezi databází a back-endem.
+Díky tomu, že back-end potřeboval několik sql dotazů,
+pro správné vyhodnocení požadavku klienta,
+tak jsem implementoval většinu do procedury.
+Tímto způsobem se zmenšila zátěž jak na back-end,
+tak na databází a samozřejmě nápor na síť klesl.
+
+### Cross-origin resource sharing
+
+Třešničkou na dortu samozřejmě byly CORS.
+Nejdříve jsem je neřešil a používal upravený prohlížeč,
+ale dříve či později jsem je musel řešit.
+Naštěstí na tento otravný problém autoři frameworku Actix Web mysleli
+a vydaly knihovnu ``actix-cors``, v té stačí je nakonfigurovat cors pravidla,
+buď pro celou aplikaci, nebo pro každý koncový bod,
+nebo pro obojí.
+
+## Vylepšení
+
+Jedině co bych vylepšil je zobrazování her ([@fig:usage_manual_game_page])
+a přidal bych více symbolů pro hráče,
+tím bych navýšil maximální počet hráčů ve hře.
+Zobrazování her bych vyřešil,
+tak že bych přidal pořádný renderer,
+například přes WebGL.
+To by mi dovolilo využít plný prostor pro hraní
+(256x256 - limitován datovým typem ``u8``),
+který je momentálně limitován na 30x30,
+kvůli současném zobrazování her.
 
 \newpage
 
 # Seznam použité literatury a zdrojů informací
 
-
+::: {#refs}
+:::
 
 \newpage
 
@@ -730,6 +1217,9 @@ docker-compose up -d
 |-:|:---------|
 API | Application Programming Interface
 CORS | Cross-origin resource sharing
+EXE | Executable
+JSON | JavaScript Object Notation
+Regex | Regular expression
 REST | Representational State Transfer
 SPŠE | Střední průmyslová škola elektrotechnická
 UUID | Universally unique identifier
@@ -742,11 +1232,9 @@ VOŠ | Vysoká odborná škola
 
 # Seznam obrázků, tabulek, příloh
 
-\listoffigures
-\listoftables
-\listoflistings
-
-
+\lof
+\lot
+\lol
 
 \newpage
 
@@ -940,6 +1428,5 @@ pub fn get_roles_from_db(_attr: TokenStream, item: TokenStream) -> TokenStream {
 ```
 
 : Zdrojový kód knihovny ``roles`` {#lst:roles_src}
-
 
 

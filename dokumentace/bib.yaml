@@ -1,0 +1,269 @@
+---
+references:
+    - id: performance_benchmark
+      title: C++ vs. Python vs. PHP vs. Java vs. Others performance benchmark (2016 Q3)
+      author:
+          - family: Zahariev
+            given: Ivan
+      issued:
+          date-parts:
+              - - 2016
+                - 9
+                - 10
+      accessed:
+          date-parts:
+              - - 2020
+                - 11
+                - 5
+      url: https://blog.famzah.net/2016/09/10/cpp-vs-python-vs-php-vs-java-vs-others-performance-benchmark-2016-q3/
+      lang: en
+
+    - id: postgres_docs
+      title: PostgreSQL 13.2 Documentation
+      author: The PostgreSQL Global Development Group
+      issued:
+          date-parts:
+              - [1996]
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://www.postgresql.org/docs/13/index.html
+      lang: en
+
+    - id: actix-web_docs
+      title: Actix Web API Documentation
+      author: The Actix Team
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/actix-web/3.3.2/actix_web/
+      lang: en
+
+    - id: actix-redis_docs
+      title: Actix Redis API Documentation
+      author: The Actix Team
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/actix-redis/0.9.1/actix_redis/
+      lang: en
+
+    - id: actix-cors_docs
+      title: Actix Cors API Documentation
+      author: The Actix Team
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/actix-cors/0.5.4/actix_cors/
+      lang: en
+
+    - id: actix-session_docs
+      title: Actix Session API Documentation
+      author: The Actix Team
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/actix-session/0.4.0/actix_session/
+      lang: en
+
+    - id: redis_docs
+      title: Redis documentation
+      author: Redis community
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://redis.io/documentation
+      lang: en
+
+    - id: yew_docs
+      title: Yew documentation
+      author: The Yew Team
+      issued:
+          date-parts:
+              - - 2021
+                - 2
+                - 25
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://yew.rs/docs/en/
+      lang: en
+
+    - id: yew_api_docs
+      title: Yew API Documentation
+      author: The Yew Team
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/yew/0.17.4/yew/
+      lang: en
+
+    - id: yew_router_api_docs
+      title: Yew Router API Documentation
+      author: The Yew Team
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/yew-router/0.14.0/yew_router/
+      lang: en
+
+    - id: uikit_docs
+      title: UIkit documentation
+      author: YOOtheme
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://getuikit.com/docs/introduction
+      lang: en
+
+    - id: rust_std_docs
+      title: Rust std API Documentation
+      author: The Rust Team
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://doc.rust-lang.org/std/
+      lang: en
+
+    - id: wasm_pack_docs
+      title: WASM-PACK documentation
+      author: Wasp-Pack Team
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://rustwasm.github.io/docs/wasm-pack/
+      lang: en
+
+    - id: docker_docs
+      title: Docker documentation
+      author: Docker Inc.
+      issued:
+          date-parts:
+              - [2013]
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.docker.com/
+      lang: en
+
+    - id: arewewebyet
+      title: Are we web yet?
+      author: The Rust Team
+      issued:
+          date-parts:
+              - - 2021
+                - 2
+                - 21
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://www.arewewebyet.org/
+      lang: en
+
+    - id: pandoc_docs
+      title: Pandoc documentation
+      author:
+          - family: MacFarlane
+            given: John
+      issued:
+          date-parts:
+              - [2006]
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://pandoc.org/MANUAL.html
+      lang: en
+
+    - id: pandoc-crossreff_docs
+      title: Pandoc-crossref documentation
+      author:
+          - family: Yakimov
+            given: Nikolay
+      issued:
+          date-parts:
+              - [2016]
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://lierdakil.github.io/pandoc-crossref/
+      lang: en
+
+    - id: zotero_style_repo
+      title: Zotero Style Repository
+      author: Corporation for Digital Scholarship
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2021
+                - 2
+                - 1
+      url: https://www.zotero.org/styles
+      lang: en

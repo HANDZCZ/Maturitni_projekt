@@ -1200,7 +1200,7 @@ například přes WebGL.
 To by mi dovolilo využít plný prostor pro hraní
 (256x256 - limitován datovým typem ``u8``),
 který je momentálně limitován na 30x30,
-kvůli současném zobrazování her.
+kvůli současnému zobrazování her.
 
 \newpage
 
@@ -1224,6 +1224,7 @@ REST | Representational State Transfer
 SPŠE | Střední průmyslová škola elektrotechnická
 UUID | Universally unique identifier
 VOŠ | Vysoká odborná škola
+WebGL | Web Graphics Library
 
 : Seznam použitých zkratek {#tbl:seznam_použitých_zkratek}
 

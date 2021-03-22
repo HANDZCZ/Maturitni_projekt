@@ -33,6 +33,7 @@ references:
       url: https://www.postgresql.org/docs/13/index.html
       lang: en
 
+      #actix-web
     - id: actix-web_docs
       title: Actix Web API Documentation
       author: The Actix Team
@@ -47,6 +48,7 @@ references:
       url: https://docs.rs/actix-web/3.3.2/actix_web/
       lang: en
 
+      #actix-redis
     - id: actix-redis_docs
       title: Actix Redis API Documentation
       author: The Actix Team
@@ -61,6 +63,7 @@ references:
       url: https://docs.rs/actix-redis/0.9.1/actix_redis/
       lang: en
 
+      # actix-cors
     - id: actix-cors_docs
       title: Actix Cors API Documentation
       author: The Actix Team
@@ -75,6 +78,7 @@ references:
       url: https://docs.rs/actix-cors/0.5.4/actix_cors/
       lang: en
 
+      #actix-session
     - id: actix-session_docs
       title: Actix Session API Documentation
       author: The Actix Team
@@ -266,4 +270,667 @@ references:
                 - 2
                 - 1
       url: https://www.zotero.org/styles
+      lang: en
+
+      #actix-files
+    - id: actix-files_docs
+      title: Actix Files API Documentation
+      author: The Actix Team
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/actix-files/0.5.0/actix_files/
+      lang: en
+
+      #argon2rs
+    - id: argon2rs_docs
+      title: Argon2rs API Documentation
+      author: bryant
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://bryant.github.io/argon2rs/argon2rs/
+      lang: en
+
+      #bincode
+    - id: bincode_docs
+      title: Bincode API Documentation
+      author: Bincode
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/bincode/1.3.2/bincode/
+      lang: en
+
+      #dotenv
+    - id: dotenv_docs
+      title: Dotenv API Documentation
+      author:
+          - family: Riordan
+            given: Zoey
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/dotenv/0.15.0/dotenv/
+      lang: en
+
+      #env_logger
+    - id: env_logger_docs
+      title: Env_logger API Documentation
+      author: SirWindfield
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/env_logger/0.8.3/env_logger/
+      lang: en
+
+      #fancy-regex
+    - id: fancy-regex_docs
+      title: Fancy-regex API Documentation
+      author: fancy-regex
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/fancy-regex/0.5.0/fancy_regex/
+      lang: en
+
+      #futures
+    - id: futures_docs
+      title: Futures API Documentation
+      author: The Rust Team
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/futures/0.3.13/futures/
+      lang: en
+
+      #futures-util
+    - id: futures-util_docs
+      title: Futures-util API Documentation
+      author:
+          - family: Cann
+            given: Andrew
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/future-utils/0.12.1/future_utils/
+      lang: en
+
+      #lazy_static
+    - id: lazy_static_docs
+      title: Lazy_static API Documentation
+      author: rust-lang-nursery
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/lazy_static/1.4.0/lazy_static/
+      lang: en
+
+      #log
+    - id: log_docs
+      title: Log API Documentation
+      author: The Rust Team
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/log/0.4.14/log/
+      lang: en
+
+      #postgres
+    - id: postgres_docs
+      title: Postgres API Documentation
+      author:
+          - family: Fackler
+            given: Steven
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/postgres/0.19.0/postgres/
+      lang: en
+
+      #proc-macro2
+    - id: proc-macro2_docs
+      title: Proc-macro2 API Documentation
+      author:
+          - family: Crichton
+            given: Alex
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/proc-macro2/1.0.24/proc_macro2/
+      lang: en
+
+      #quote
+    - id: quote_docs
+      title: Quote API Documentation
+      author:
+          - family: Tolnay
+            given: David
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/quote/1.0.9/quote/
+      lang: en
+
+      #rand
+    - id: rand_docs
+      title: Rand API Documentation
+      author: rust-random
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/rand/0.8.3/rand/
+      lang: en
+
+      #roles
+    - id: roles_crate
+      title: Knihovna Roles
+      author:
+          - family: Najman
+            given: Jan
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      lang: en
+
+      #serde
+    - id: serde_docs
+      title: Serde API Documentation
+      author: serde-rs
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.serde.rs/serde/
+      lang: en
+
+      #serde_json
+    - id: serde_json_docs
+      title: Serde_json API Documentation
+      author: serde-rs
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.serde.rs/serde_json/
+      lang: en
+
+      #serde_repr
+    - id: serde_repr_docs
+      title: Serde_repr API Documentation
+      author:
+          - family: Tolnay
+            given: David
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/serde_repr/0.1.6/serde_repr/
+      lang: en
+
+      #sqlx
+    - id: sqlx_docs
+      title: Sqlx API Documentation
+      author: launchbadge
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/sqlx/0.5.1/sqlx/
+      lang: en
+
+      #structopt
+    - id: structopt_docs
+      title: Structopt API Documentation
+      author: TeXitoi
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/structopt/0.3.21/structopt/
+      lang: en
+
+      #strum
+    - id: strum_docs
+      title: Strum API Documentation
+      author:
+          - family: Glotfelty
+            given: Peter
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/strum/0.20.0/strum/
+      lang: en
+
+      #syn
+    - id: syn_docs
+      title: Syn API Documentation
+      author:
+          - family: Tolnay
+            given: David
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/syn/1.0.62/syn/
+      lang: en
+
+      #thiserror
+    - id: thiserror_docs
+      title: Thiserror API Documentation
+      author:
+          - family: Tolnay
+            given: David
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/thiserror/1.0.24/thiserror/
+      lang: en
+
+      #time
+    - id: time_docs
+      title: Time API Documentation
+      author: Time
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/time/0.2.25/time/
+      lang: en
+
+      #tokio
+    - id: tokio_docs
+      title: Tokio API Documentation
+      author: Tokio
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/tokio/1.2.0/tokio/
+      lang: en
+
+      #uuid
+    - id: uuid_docs
+      title: Uuid API Documentation
+      author: Rust Uuid
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/uuid/0.8.2/uuid/
+      lang: en
+
+      #wasm-bindgen
+    - id: wasm-bindgen_docs
+      title: Wasm-bindgen API Documentation
+      author: Rust and WebAssembly
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/wasm-bindgen/0.2.71/wasm_bindgen/
+      lang: en
+
+      #wasm-logger
+    - id: wasm-logger_docs
+      title: Wasm-logger API Documentation
+      author: Limira
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/wasm-logger/0.2.0/wasm_logger/
+      lang: en
+
+      #wee_alloc
+    - id: wee_alloc_docs
+      title: Wee_alloc API Documentation
+      author: Rust and WebAssembly
+      issued:
+          date-parts:
+              - [2021]
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://docs.rs/wee_alloc/0.4.5/wee_alloc/
+      lang: en
+
+      #alexander-slattery-LI748t0BK8w-unsplash.jpg
+    - id: alexander-slattery-LI748t0BK8w-unsplash.jpg_image
+      title: Obrázek
+      author:
+          - family: Slattery
+            given: Alexander
+      issued:
+          date-parts:
+              - - 2017
+                - 7
+                - 15
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://unsplash.com/photos/LI748t0BK8w
+      lang: en
+
+      #andre-benz-JBkwaYMuhdc-unsplash.jpg
+    - id: andre-benz-JBkwaYMuhdc-unsplash.jpg_image
+      title: Obrázek
+      author:
+          - family: Benz
+            given: Andre
+      issued:
+          date-parts:
+              - - 2018
+                - 12
+                - 10
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://unsplash.com/photos/JBkwaYMuhdc
+      lang: en
+
+      #fabio-sasso-fFmCevlfWlo-unsplash.jpg
+    - id: fabio-sasso-fFmCevlfWlo-unsplash.jpg_image
+      title: Obrázek
+      author:
+          - family: Sasso
+            given: Fabio
+      issued:
+          date-parts:
+              - - 2020
+                - 1
+                - 1
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://unsplash.com/photos/fFmCevlfWlo
+      lang: en
+
+      #jonas-elia-x6HHgq2zDvI-unsplash.jpg
+    - id: jonas-elia-x6HHgq2zDvI-unsplash.jpg_image
+      title: Obrázek
+      author:
+          - family: Elia
+            given: Jonas
+      issued:
+          date-parts:
+              - - 2018
+                - 12
+                - 29
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://unsplash.com/photos/x6HHgq2zDvI
+      lang: en
+
+      #pexels-aleksandar-pasaric-2341830.jpg
+    - id: pexels-aleksandar-pasaric-2341830.jpg_image
+      title: Obrázek
+      author:
+          - family: Pasaric
+            given: Aleksandar
+      issued:
+          date-parts:
+              - - 2019
+                - 5
+                - 20
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://www.pexels.com/photo/body-of-water-across-bridge-during-nighttime-2341830/
+      lang: en
+
+      #pexels-aleksandar-pasaric-4201659.jpg
+    - id: pexels-aleksandar-pasaric-4201659.jpg_image
+      title: Obrázek
+      author:
+          - family: Pasaric
+            given: Aleksandar
+      issued:
+          date-parts:
+              - - 2020
+                - 4
+                - 20
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://www.pexels.com/photo/light-city-landscape-night-4201659/
+      lang: en
+
+      #pexels-aleksejs-bergmanis-681335.jpg
+    - id: pexels-aleksejs-bergmanis-681335.jpg_image
+      title: Obrázek
+      author:
+          - family: Bergmanis
+            given: Aleksejs
+      issued:
+          date-parts:
+              - - 2017
+                - 11
+                - 9
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://www.pexels.com/photo/aerial-photo-of-buildings-and-roads-681335/
+      lang: en
+
+      #pexels-felix-mittermeier-957002.jpg
+    - id: pexels-felix-mittermeier-957002.jpg_image
+      title: Obrázek
+      author:
+          - family: Mittermeier
+            given: Felix
+      issued:
+          date-parts:
+              - - 2018
+                - 3
+                - 22
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://www.pexels.com/photo/birdseye-photography-of-city-buildings-near-trees-and-mountains-957002/
+      lang: en
+
+      #pexels-sanaan-mazhar-3075993.jpg
+    - id: pexels-sanaan-mazhar-3075993.jpg_image
+      title: Obrázek
+      author:
+          - family: Mazhar
+            given: Sanaan
+      issued:
+          date-parts:
+              - - 2019
+                - 10
+                - 14
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://www.pexels.com/photo/photo-of-skyline-at-night-3075993/
+      lang: en
+
+      #toyamakanna-H_D-Kscai28-unsplash.jpg
+    - id: toyamakanna-H_D-Kscai28-unsplash.jpg_image
+      title: Obrázek
+      author:
+          - family: Toyama
+            given: Kana
+      issued:
+          date-parts:
+              - - 2020
+                - 9
+                - 7
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://unsplash.com/photos/H_D-Kscai28
+      lang: en
+
+      #yong-chuan-tan-YlxMenahnB4-unsplash.jpg
+    - id: yong-chuan-tan-YlxMenahnB4-unsplash.jpg_image
+      title: Obrázek
+      author:
+          - family: Yong
+            given: Chuan
+      issued:
+          date-parts:
+              - - 2020
+                - 5
+                - 18
+      accessed:
+          date-parts:
+              - - 2020
+                - 9
+                - 30
+      url: https://unsplash.com/photos/YlxMenahnB4
       lang: en

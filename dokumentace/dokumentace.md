@@ -150,11 +150,11 @@ Front-end applications, programming, framework, Yew
 
 Poslední dobou se všichni pokouší optimalizovat své web servery již při jejich programování,
 kvůli náporu, který by nemusely stíhat.
-Kdo tak neprovede může toho litovat a snaží se tento problém obejít jinak.
+Kdo tak neprovede, může toho litovat a snaží se tento problém obejít jinak.
 Tím že změní jazyk nebo vytvoří repliky své aplikace a dají na ně load-balancer,
 tuto možnost nakonec musí využít všichni, při velmi vysokém náporu.
 
-Bohužel nepoužívanější jazyky k naprogramování web serveru jsou PHP, JS (Node.js) nebo Python (Flask, Django).
+Bohužel nejpoužívanější jazyky k naprogramování web serveru jsou PHP, JS (Node.js) nebo Python (Flask, Django).
 Dá se v nich rychle udělat co potřebujete, ale mají spoustu nevýhod, a hlavně všechny tyto jazyky jsou tzv.\ interpretované jazyky.
 To znamená, že na pozadí běží nějaký engine (interpreter), který musí zpracovat daný kód za běhu.
 Jejich největším problémem oproti kompilovaným programovacím jazykům jako jsou Rust, C++, C#
@@ -173,7 +173,7 @@ Python 2.7 | 2562 %
 : Porovnání rychlosti jazyků [@performance_benchmark] {#tbl:porovnani_rychlosti_jazyku}
 
 Rozhodl jsem se ukázat, že systémový programovací jazyk Rust
-je na tolik vyspělý, že se nejen zvládne vše, co jiné jazyky, ale i to, že je rychlejší
+je natolik vyspělý, že nejen zvládne vše co jiné jazyky, ale i to, že je rychlejší
 než konkurence.
 
 Vybral jsem si programování RESTful API serveru a front-endové webové aplikace
@@ -391,9 +391,9 @@ Zobrazuje informace o uživatelích a hrách.
 
 ## Administrace
 
-Každý uživatel, co má roli *Admin* má zvýšená práva. Může upravovat ostatní uživatele,
-vytvářet pozvánky ve kterých nemusí být, nebo může obsahovat uživatele, 
-kteří nemohou být normálně přidáni do pozvánky. Může také vypnout skoro všechny kontroly,
+Každý uživatel, který má roli *Admin* má zvýšená práva. Může upravovat ostatní uživatele,
+vytvářet pozvánky, ve kterých nemusí být, nebo může obsahovat uživatele, 
+kteří nemohou být normálně přidáni do pozvánky. Může také vypnout skoro všechny kontroly
 jako je formát jména, hesla, popisu uživatele atd.
 
 ## Design a responzivita
@@ -425,11 +425,11 @@ Velké množství příspěvků pochází od členů komunity.
 
 ### SQL
 
-SLQ je jazyk specificky určený ke správě dat uchovávaných v systému správy relačních databází.
+SQL je jazyk specificky určený ke správě dat uchovávaných v systému správy relačních databází.
 Je obzvláště užitečný při zpracování strukturovaných dat.
 Dat zahrnujících vztahy mezi subjekty a proměnnými.
 
-Umožňuje přístupu k mnoha záznamům pomocí jediného příkazu.
+Umožňuje přístup k mnoha záznamům pomocí jediného příkazu.
 Vylučuje potřebu specifikovat, jak dosáhnout záznamu, např. s indexem nebo bez něj.
 
 ### Knihovna roles
@@ -448,7 +448,7 @@ Zdrojový kód knihovny ``roles`` [@lst:roles_src]
 
 Back-end je naprogramován celý v jazyce Rust.
 
-- *structopt* - získává parametry pro program z příkazového řádku, nebo z proměnných prostředí (Environment variables)
+- *structopt* - získává parametry pro program z příkazového řádku nebo z proměnných prostředí (Environment variables)
 - *dotenv* - načte ``.env`` soubor do proměnných prostředí
 - *thiserror* - slouží pro zacházení s chybami
 - *actix-web* - hlavní knihovna pro web server
@@ -486,7 +486,7 @@ Rust knihovny:
 - *wasm-bindgen* - knihovna usnadňující interakci na vysoké úrovni mezi moduly wasm (WebAssembly) a JavaScriptem
 - *yew-router* - směrovací knihovna pro knihovnu yew
 - *wee_alloc* - alokátor pro WebAssembly
-- *wasm-logger* - slouží jako back-end pro k výpisu akcí do konzole prohlížeče
+- *wasm-logger* - slouží jako back-end pro výpis akcí do konzole prohlížeče
 - *log* - používá se k výpisu akcí serveru (logging)
 - *roles* - mnou vytvořená knihovna, která při kompilaci načte role z databáze a převede je do datového typu ``enum``
 - *lazy_static* - je použit k vyhodnocování proměnných jen jednou a jen při použití
@@ -506,7 +506,7 @@ CSS a JS knihovny:
 
 Speciálně vytvořený server pro správnou funkci front-endu.
 
-- *structopt* - získává parametry pro program z příkazového řádku, nebo z proměnných prostředí (Environment variables)
+- *structopt* - získává parametry pro program z příkazového řádku nebo z proměnných prostředí (Environment variables)
 - *dotenv* - načte ``.env`` soubor do proměnných prostředí
 - *actix-web* - hlavní knihovna pro web server
 - *env_logger* - slouží jako back-end k výpisu akcí serveru (logging)
@@ -515,7 +515,7 @@ Speciálně vytvořený server pro správnou funkci front-endu.
 
 ## Databáze
 
-Spousta akcí, které back-end podniká jsou řešené skrz procedury.
+Spousta akcí, které back-end podniká, jsou řešené skrz procedury.
 Tímto způsobem dojde k zjednodušení kódu na back-endu
 a k provedení akce není potřeba dělat několik dotazů na databázi.
 
@@ -595,11 +595,11 @@ poté se k daným vlastnostem dá dostat pomocí
 ``struktura.vlastnost``.
 
 Všechny vlastnosti struktury sdílejí stejnou proměnlivost jako samotná struktura,
-takže ``struktura.vlastnost = 2;`` by bylo validní, jen když by celá struktura byla proměnlivá.
+takže ``struktura.vlastnost = 2;`` by bylo validní jen, kdyby celá struktura byla proměnlivá.
 Přidáním ``pub`` před jméno vlastnosti způsobí,
 že daná vlastnost je viditelná i v jiných modulech a je možno jí přímo číst nebo měnit.
 
-Tuple struktury jsou podobné to regulárním strukturám, ale jejich vlastnosti nemají žádná jména.
+Tuple struktury jsou podobné regulárním strukturám, ale jejich vlastnosti nemají žádná jména.
 Pro přístup k vlastnostem se použije pozice vlastnosti, začínající od nuly ``struktura.0``, ``struktura.1`` atd.
 
 Unit struktury jsou hlavně používány jako markery.
@@ -618,7 +618,7 @@ Traity můžou být složeny až ze tří druhů položek:
 - typy
 - konstanty
 
-Traity také mohou sloužit jako markery, nebo mohou nést jiné logiku, která není vyjádřená v jejich názvech.
+Traity také mohou sloužit jako markery nebo mohou nést jinou logiku, která není vyjádřená v jejich názvech.
 
 ```{.rust .numberLines}
 struct Pes {
@@ -682,9 +682,9 @@ Nevytváří nové datové typy, proto se ve výše uvedeném příkladu tři mi
 Uživatelé jsou umístěni v tabulce *users*.
 Role jsou uloženy v tabulce *roles* a jsou k uživatelům přiřazovány skrz tabulku *roles_to_users*.
 
-Pokud má uživatel roli *Admin* tak mohou upravovat kohokoli údaje bez omezení včetně rolí a hesla.
+Pokud má uživatel roli *Admin*, tak může upravovat kohokoli údaje bez omezení včetně rolí a hesla.
 
-Pokud má uživatel roli *Banned* tak nemůže vytvářet pozvánky,
+Pokud má uživatel roli *Banned*, tak nemůže vytvářet pozvánky,
 ani nemůže být zahrnut do pozvánky jiným uživatelem.
 
 Úprava uživatele po kontrole dat je poté řízena procedurou [@lst:update_user_sql_procedure].
@@ -702,21 +702,21 @@ Vytvoření pozvánky po kontrole dat je poté řízeno procedurou [@lst:new_gam
 
 ### Vytvoření hratelné hry
 
-Po vytvoření žádosti o hru jí musí všichni hráči potvrdit a hra bude vytvořena,
+Po vytvoření žádosti o hru ji musí všichni hráči potvrdit a hra bude vytvořena,
 nebo někdo z pozvaných hráčů odmítne žádost a žádost o hru bude vymazána.
 
 Jakmile je účast všech hráčů potvrzena, tak se vytvoří nová hra v tabulce *games*,
 přiřadí se k ní uživatelé skrz tabulku *games_to_users* a žádost o hru je poté vymazána.
 
-Úpravu pozvánky po kontrole dat je poté řízena procedurou [@lst:update_invite_sql_procedure]
+Úprava pozvánky po kontrole dat je poté řízena procedurou [@lst:update_invite_sql_procedure]
 
 ### Hraní hry {#sec:practical_part_playing_game}
 
-Hrát můžete jen když jste na tahu a pokud hrané políčko ještě nebylo použito.
-Vyhraní hry se kontroluje na front-endu, pokud front-end usoudí,
+Hrát můžete jen když jste na tahu, a pokud hrané políčko ještě nebylo použito.
+Výhra hry se kontroluje na front-endu, pokud front-end usoudí,
 že hráč vyhrál tak výhru oznámí back-endu a ten výhru zkontroluje.
 
-Back-end kontroluje, jestli je hráč na tahu, jestli hra neskončila, nebo jestli jeho tah je validní.
+Back-end kontroluje, jestli je hráč na tahu, jestli hra neskončila nebo jestli jeho tah je validní.
 V případě, že hráč ohlásí výhru, ale server zjistí, že to tak není, tak daný tah zahodí a odpoví chybou.
 
 
@@ -727,7 +727,7 @@ V případě, že hráč ohlásí výhru, ale server zjistí, že to tak není, 
 Pole emailu je kontrolováno.
 Pokud pole není validní, tak se nepošlou data na back-end.
 
-Back-end data zkontroluje a pokud zjistí, že nejsou validní,
+Back-end data zkontroluje, a pokud zjistí, že nejsou validní,
 tak žádost zahodí a vrátí chybu.
 
 ### Profil
@@ -736,9 +736,9 @@ Zobrazuje informace o uživateli a hry,
 ve kterých se nachází.
 
 Zobrazuje také počet výher, proher a remíz. 
-Z těchto dat poté vypočítá winrate (výhry / prohry).
+Z těchto dat poté vypočítá winrate (výhry/prohry).
 
-Pokud je uživatel na svém profilu, nebo pokud má uživatel roli *Admin*,
+Pokud je uživatel na svém profilu nebo pokud má uživatel roli *Admin*,
 tak se mu také zobrazí tlačítko na upravení profilu.
 
 ### Výpis uživatelů
@@ -749,7 +749,7 @@ Uživatelům s rolí *Admin* se navíc zobrazuje tlačítko upravení profilu.
 
 ### Výpis her
 
-Zobrazuje všechny rozehrané, nebo dohrané hry s jejich hráči a stavem hry.
+Zobrazuje všechny rozehrané nebo dohrané hry s jejich hráči a stavem hry.
 
 ### Hraní hry
 
@@ -765,7 +765,7 @@ Tahy uživatelů jsou kontrolovány, jestli jsou validní a jestli nastala výhr
 
 Zobrazuje název pozvánky (později název hry), počet tahů k vítězství a id pozvánky.
 
-Uživatel může pozvánku přijmout, nebo odmítnout.
+Uživatel může pozvánku přijmout nebo odmítnout.
 
 ### Vytváření pozvánky
 
@@ -775,7 +775,7 @@ Uživatelé s rolí *Admin* mají práva na vypnutí skoro všech kontrol.
 
 ### Úprava uživatele
 
-Uživatel může upravovat vše, kromě jeho rolí.
+Uživatel může upravovat vše kromě jeho rolí.
 
 Uživatel s rolí *Admin* může upravovat vše a má možnost vypnout kontrolu,
 která je vyžadována po ostatních uživatelích.
@@ -785,7 +785,7 @@ která je vyžadována po ostatních uživatelích.
 Všechna pole jsou kontrolována.
 Pokud nějaké pole není validní, tak se nepošlou data na back-end.
 
-Back-end data zkontroluje a pokud zjistí, že nejsou validní,
+Back-end data zkontroluje, a pokud zjistí, že nejsou validní,
 tak žádost zahodí a vrátí chybu.
 
 Pro hashování hesla se používá 128 znaková sůl a algoritmus Argon2.
@@ -795,7 +795,7 @@ Pro hashování hesla se používá 128 znaková sůl a algoritmus Argon2.
 
 # Manuál pro spuštění aplikace
 
-Aplikace se dá spustit více způsoby. Buď kompilací ze zdrojového kódu, nebo pomocí kontejnerů.
+Aplikace se dá spustit více způsoby. Buď kompilací ze zdrojového kódu nebo pomocí kontejnerů.
 
 ## Instalace potřebných nástrojů
 
@@ -817,7 +817,7 @@ Po stažení jej nainstalujeme.
 
 ### Použití kontejnerů
 
-Pro použití kontejnerů potřebujeme nějaký software, který to umožňuje spouštění kontejnerů a manipulaci s nimi.
+Pro použití kontejnerů potřebujeme nějaký software, který umožňuje spouštění kontejnerů a manipulaci s nimi.
 Já jsem zvolil docker, jeden z nejznámějších nástrojů pro používání a výrobu kontejnerů.
 
 Přejdeme na stránku stažení <https://hub.docker.com/editions/community/docker-ce-desktop-windows/>
@@ -911,7 +911,7 @@ frontend:
 
 Samozřejmě tato aplikace má být postavená například za nginx server.
 Ale pokud jen testujeme na svém počítači,
-tak můžeme do souboru ``hosts`` přidat položky,
+tak můžeme do souboru ``hosts`` přidat položky
 pro přeložení adresy front-endu a back-endu:
 
 ```
@@ -1089,8 +1089,8 @@ Administrátoři mají na konci stránky více možností úpravy.
 Pro hraní hry musíte mít hru v probíhajícím stavu a být hráč dané hry.
 Pokud žádnou z takových her nemáte, můžete ji vytvořit ([@sec:usage_manual_new_invite_page]).
 
-Hru, kterou chcete hrát můžete najít na svém profilu ([@sec:usage_manual_profile_page]).
-Potom co jí najdete klikněte na tlačítko ``PŘEJÍT NA HRU``.
+Hru, kterou chcete hrát, můžete najít na svém profilu ([@sec:usage_manual_profile_page]).
+Potom, co ji najdete, klikněte na tlačítko ``PŘEJÍT NA HRU``.
 
 ![Stránka hraní hry](usage_manual_game_page.png){#fig:usage_manual_game_page}
 
@@ -1110,7 +1110,7 @@ Tento fakt ukazuje i čím dál více rostoucí komunita
 a stránka "Are we *web* yet?" [@arewewebyet],
 která sleduje vývoj webových technologií v Rustu.
 
-Jedním z mých úkolů, také bylo držet se open source
+Jedním z mých úkolů také bylo držet se open source
 a s radostí mohu prohlásit, že se mi to úspěšně povedlo.
 
 Co se týče hlavních bodů maturitní práce,
@@ -1119,9 +1119,9 @@ tak mohu bez starostí říci,
 
 1. "Hry se budou ukládat do databáze" - hry jsou uloženy v databázi PostgreSQL
 v tabulce *games*
-2. "Hry budou moct být hrány na tahy nebo odehrány v celku" - hry můžete odehrát v jedno sezení nebo ve více,
-nezáleží na tom, jak dlouho bude trvat 5 minut, nebo 5 let
-3. "Rozdělení uživatelů na přihlášené a nepřihlášené a administrátory" - uživatelé jsou rozděleni na nepřihlášené a přihlášené
+2. "Hry budou moct být hrány na tahy nebo odehrány v celku" - hry můžete odehrát v jednom sezení nebo ve více,
+nezáleží na tom, jak dlouho bude sezení trvat, zda 5 minut nebo 5 let
+3. "Rozdělení uživatelů na přihlášené a nepřihlášené a administrátory" - uživatelé jsou rozděleni na nepřihlášené a přihlášené;
 a pomocí role *Admin* na přihlášené a administrátory
 4. "Tahy hráčů budou kontrolovány na serveru" - tahy jsou kontrolovány [@sec:practical_part_playing_game]
 5. "Data odesílaná klientem nebo uživatelem budou mít co nejmenší velikost" - skoro všechna data jsou posílány ve formát JSON,
@@ -1144,10 +1144,10 @@ Jedním ze závažnějších problémů byla databáze.
 Nejprve jsem pracoval s MySQL databází,
 ale později se ukázalo, že má mnoho limitací a nevýhod.
 
-Jednou z nich byla limitace datového typu string,
+Jednou z nich byla limitace datového typu string
 neboli ``varchar`` (nebo ``char``), který neměl dostatečnou délku.
 Později jsem taky zjistil, že datový typ ``varchar`` při různých operacích
-je převáděn na datový typ ``char`` a zbité bajty jsou vyplněny.
+je převáděn na datový typ ``char`` a zbylé bajty jsou vyplněny.
 Takže místo porovnávání textu s různou délkou,
 dochází k porovnávání textu se stejnou délkou (255 znaků).
 MySQL má datový typ, který umožňuje ukládat delší text,
@@ -1155,14 +1155,14 @@ ale jak s ním pracuje mi vůbec nevyhovovalo.
 
 Druhou z nevýhod byly procedury,
 které se v tomto jazyce nedají psát!
-Jakým způsobem se procedury píší nedává žádný smysl.
+Jakým způsobem se procedury píší, nedává žádný smysl.
 Dokonce si dovoluji říct, že psát kód v assembly je jednodušší.
 
 Z výše uvedených důvodů jsem přešel na open source databázi PostgreSQL.
 Tato databáze vyřešila všechny mé problémy, a více.
 Díky této databázi jsem byl schopný použít pro id tabulek datový typ UUID,
-který nevyčerpám, ani když se budu snažit a také používat json data nativně.
-Mohu používat datový typ text, bez jakéhokoli problému,
+který nevyčerpám, ani když se budu snažit a také mohu používat data typu JSON nativně.
+Mohu používat datový typ text bez jakéhokoli problému
 či snížení výkonu.
 Mohu vracet výsledky z insertů či updatů.
 Ale jedna z nejdůležitějších vlastností byla pro mě možnost psát procedury,
@@ -1173,11 +1173,11 @@ které podporují základní věci jako je cyklus
 
 Další problém, na který jsem narazil,
 byla komunikace mezi databází a back-endem.
-Díky tomu, že back-end potřeboval několik sql dotazů,
+Díky tomu, že back-end potřeboval několik sql dotazů
 pro správné vyhodnocení požadavku klienta,
 tak jsem implementoval většinu do procedury.
 Tímto způsobem se zmenšila zátěž jak na back-end,
-tak na databází a samozřejmě nápor na síť klesl.
+tak na databázi a samozřejmě nápor na síť klesl.
 
 ### Cross-origin resource sharing
 
@@ -1185,17 +1185,18 @@ Třešničkou na dortu samozřejmě byly CORS.
 Nejdříve jsem je neřešil a používal upravený prohlížeč,
 ale dříve či později jsem je musel řešit.
 Naštěstí na tento otravný problém autoři frameworku Actix Web mysleli
-a vydaly knihovnu ``actix-cors``, v té stačí je nakonfigurovat cors pravidla,
+a vydali knihovnu ``actix-cors``.
+V té stačí jen nakonfigurovat cors pravidla
 buď pro celou aplikaci, nebo pro každý koncový bod,
 nebo pro obojí.
 
 ## Vylepšení
 
 Jedině co bych vylepšil je zobrazování her ([@fig:usage_manual_game_page])
-a přidal bych více symbolů pro hráče,
+a rovněž bych přidal více symbolů pro hráče,
 tím bych navýšil maximální počet hráčů ve hře.
-Zobrazování her bych vyřešil,
-tak že bych přidal pořádný renderer,
+Zobrazování her bych vyřešil tak,
+že bych přidal pořádný renderer,
 například přes WebGL.
 To by mi dovolilo využít plný prostor pro hraní
 (256x256 - limitován datovým typem ``u8``),
